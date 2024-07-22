@@ -1,5 +1,5 @@
 {
-  "name": "organizations",
+  "name": "@drive-app/organizations",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -15,7 +15,6 @@
     "prisma": "^5.17.0"
   },
   "devDependencies": {
-    "@types/bcryptjs": "^2.4.6",
     "dotenv-cli": "^7.4.2"
   }
 }

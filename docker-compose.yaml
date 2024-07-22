@@ -50,6 +50,20 @@ services:
       - '3004:3004'
     volumes:
       - .:/usr/src/app
+  notifications:
+    build:
+      context: .
+      dockerfile: ./apps/notifications/Dockerfile
+      target: development
+    command: sh -c "pnpm run start:dev notifications"
+    depends_on:
+      - postgres
+    env_file:
+      - ./apps/notifications/.env
+    ports:
+      - '3006:3006'
+    volumes:
+      - .:/usr/src/app
   payments:
     build:
       context: .
