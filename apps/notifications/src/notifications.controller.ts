@@ -1,12 +1,18 @@
-import { Controller, Post } from '@nestjs/common';
+import { Controller, UsePipes, ValidationPipe } from '@nestjs/common';
 import { NotificationsService } from './notifications.service';
+import { EventPattern } from '@nestjs/microservices';
+import { NotificationEmailDto } from './dto/notify-email.dto';
 
 @Controller()
 export class NotificationsController {
   constructor(private readonly notificationsService: NotificationsService) {}
 
-  @Post()
-  create() {
-    return { message: 'Notification created' };
+  @UsePipes(new ValidationPipe())
+  @EventPattern('reset-password-notification')
+  async sendNotification({ email, token }: NotificationEmailDto) {
+    await this.notificationsService.sendEmail(email, token);
+    return {
+      message: 'Notification sent successfully',
+    };
   }
 }

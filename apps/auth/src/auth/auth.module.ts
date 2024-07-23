@@ -12,6 +12,7 @@ import { UniqueEmailValidator } from '../utils/validators/unique-email.validator
 import { UsersService } from '../users/users.service';
 import { jwtConfigFactory, configValidationSchema } from './helpers';
 import { UniquePhoneValidator } from '../utils/validators/unique-phone.validator';
+import { ResetPasswordModule } from '../reset-password/reset-password.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { UniquePhoneValidator } from '../utils/validators/unique-phone.validator
       inject: [ConfigService],
     }),
     AuthModule,
+    ResetPasswordModule,
   ],
   controllers: [AuthController],
   providers: [

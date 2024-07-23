@@ -16,12 +16,14 @@ import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { User } from '.prisma/client';
 import { CreateUserDto } from '../utils/dto/create-user.dto';
 import { UsersService } from '../users/users.service';
+import { ResetPasswordService } from '../reset-password/reset-password.service';
 
 @Controller('auth')
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
     private readonly usersService: UsersService,
+    private readonly resetPasswordService: ResetPasswordService,
   ) {}
 
   @UseGuards(LocalAuthGuard)
@@ -55,5 +57,10 @@ export class AuthController {
   @MessagePattern('authenticate')
   async authenticate(@Payload() data: any) {
     return data.user;
+  }
+
+  @Post('forgot-password')
+  async forgotPassword(@Body() body: { email: string }) {
+    return await this.resetPasswordService.sendResetEmail(body.email);
   }
 }

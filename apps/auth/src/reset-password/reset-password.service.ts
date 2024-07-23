@@ -1,11 +1,17 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { ResetPassword } from '.prisma/client';
-import { randomString } from '@app/common';
+import { NOTIFICATION_SERVICE, randomString } from '@app/common';
+import { ClientProxy } from '@nestjs/microservices';
+import { map } from 'rxjs';
 
 @Injectable()
 export class ResetPasswordService {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(
+    @Inject(NOTIFICATION_SERVICE)
+    private readonly notificationsService: ClientProxy,
+    private readonly prismaService: PrismaService,
+  ) {}
 
   async createResetToken(userId: number): Promise<ResetPassword> {
     const token = randomString();
@@ -35,5 +41,19 @@ export class ResetPasswordService {
         deletedAt: new Date(),
       },
     });
+  }
+
+  async sendResetEmail(email: string) {
+    const token = randomString();
+    return this.notificationsService
+      .send('reset-password-notification', {
+        email,
+        token,
+      })
+      .pipe(
+        map((response) => {
+          return response;
+        }),
+      );
   }
 }
