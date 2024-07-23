@@ -5,7 +5,7 @@ import { Response } from 'express';
 import { TokenPayload } from '../utils/interfaces/token-payload.interface';
 import { User } from '.prisma/client';
 import { HashService } from '../utils/services/hash.service';
-import { RegisterUserDto } from './dto/register.dto';
+import { CreateUserDto } from './../utils/dto/create-user.dto';
 import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
@@ -36,7 +36,7 @@ export class AuthService {
     });
   }
 
-  async register(data: RegisterUserDto): Promise<User> {
+  async register(data: CreateUserDto): Promise<User> {
     const password = await this.hashService.hash(data.password);
 
     const result = await this.prismaService.user.create({

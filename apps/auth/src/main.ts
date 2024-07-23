@@ -1,5 +1,5 @@
 import { NestFactory } from '@nestjs/core';
-import { AuthModule } from './auth/auth.module';
+import { AppModule } from './app.module';
 import { Logger } from 'nestjs-pino';
 import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
@@ -8,10 +8,10 @@ import { Transport } from '@nestjs/microservices';
 import { useContainer } from 'class-validator';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AuthModule);
+  const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService);
 
-  useContainer(app.select(AuthModule), { fallbackOnErrors: true });
+  useContainer(app.select(AppModule), { fallbackOnErrors: true });
 
   app.connectMicroservice({
     transport: Transport.TCP,

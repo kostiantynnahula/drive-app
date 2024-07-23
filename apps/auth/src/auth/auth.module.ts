@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
-import { UsersModule } from '../users/users.module';
 import { LoggerModule } from '@app/common';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -12,10 +11,10 @@ import { PrismaModule } from '../prisma/prisma.module';
 import { UniqueEmailValidator } from '../utils/validators/unique-email.validator';
 import { UsersService } from '../users/users.service';
 import { jwtConfigFactory, configValidationSchema } from './helpers';
+import { UniquePhoneValidator } from '../utils/validators/unique-phone.validator';
 
 @Module({
   imports: [
-    UsersModule,
     LoggerModule,
     PrismaModule,
     ConfigModule.forRoot({
@@ -35,6 +34,7 @@ import { jwtConfigFactory, configValidationSchema } from './helpers';
     JwtStrategy,
     HashService,
     UniqueEmailValidator,
+    UniquePhoneValidator,
     UsersService,
   ],
 })
