@@ -1,18 +1,24 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import * as bcrypt from 'bcryptjs';
 import { CreateUserDto } from './dto/create-user.dto';
 import { GetUserDto } from './dto/get-user.dto';
-import { PrismaService } from '../prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
+import { User } from '.prisma/client';
+import { HashService } from '../utils/services/hash.service';
 
 @Injectable()
 export class UsersService {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(
+    private readonly prismaService: PrismaService,
+    private readonly hashService: HashService,
+  ) {}
 
   async create(createUserDto: CreateUserDto) {
+    const password = await this.hashService.hash(createUserDto.password);
+
     return this.prismaService.user.create({
       data: {
         ...createUserDto,
-        password: await bcrypt.hash(createUserDto.password, 10),
+        password: password,
       },
     });
   }
@@ -22,7 +28,11 @@ export class UsersService {
       where: { email },
     });
 
-    const passwordIsValid = await bcrypt.compare(password, user.password);
+    const passwordIsValid = await this.hashService.compare(
+      password,
+      user.password,
+    );
+
     if (!passwordIsValid) {
       throw new UnauthorizedException('Credentials are not valid.');
     }
@@ -31,5 +41,9 @@ export class UsersService {
 
   async getUser({ id }: GetUserDto) {
     return this.prismaService.user.findFirstOrThrow({ where: { id: +id } });
+  }
+
+  async findByEmail(email: string): Promise<User> {
+    return this.prismaService.user.findFirst({ where: { email } });
   }
 }

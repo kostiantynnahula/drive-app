@@ -2,14 +2,19 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { Response } from 'express';
-import { TokenPayload } from './interfaces/token-payload.interface';
+import { TokenPayload } from '../utils/interfaces/token-payload.interface';
 import { User } from '.prisma/client';
+import { HashService } from '../utils/services/hash.service';
+import { RegisterUserDto } from './dto/register.dto';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly configService: ConfigService,
     private readonly jwtService: JwtService,
+    private readonly hashService: HashService,
+    private readonly prismaService: PrismaService,
   ) {}
 
   async login(user: User, response: Response) {
@@ -18,6 +23,7 @@ export class AuthService {
     };
 
     const expires = new Date();
+
     expires.setSeconds(
       expires.getSeconds() + this.configService.get('JWT_EXPIRATION'),
     );
@@ -28,5 +34,18 @@ export class AuthService {
       httpOnly: true,
       expires,
     });
+  }
+
+  async register(data: RegisterUserDto): Promise<User> {
+    const password = await this.hashService.hash(data.password);
+
+    const result = await this.prismaService.user.create({
+      data: {
+        ...data,
+        password,
+      },
+    });
+
+    return result;
   }
 }
