@@ -50,6 +50,23 @@ services:
       - '3004:3004'
     volumes:
       - .:/usr/src/app
+  lessons:
+    build:
+      context: .
+      dockerfile: ./apps/lessons/Dockerfile
+      target: development
+    command: sh -c "
+      pnpm prisma migrate deploy --schema apps/lessons/prisma/schema.prisma &&
+      pnpm prisma generate --schema apps/lessons/prisma/schema.prisma &&
+      pnpm run start:dev lessons"
+    depends_on:
+      - postgres
+    env_file:
+      - ./apps/lessons/.env
+    ports:
+      - '3007:3007'
+    volumes:
+      - .:/usr/src/app
   notifications:
     build:
       context: .
