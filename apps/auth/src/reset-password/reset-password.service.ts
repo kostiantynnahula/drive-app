@@ -1,19 +1,18 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { ResetPassword } from '.prisma/client';
-import { NOTIFICATION_SERVICE, randomString } from '@app/common';
-import { ClientProxy } from '@nestjs/microservices';
-import { map } from 'rxjs';
-
+import { randomString } from '@app/common';
 @Injectable()
 export class ResetPasswordService {
-  constructor(
-    @Inject(NOTIFICATION_SERVICE)
-    private readonly notificationsService: ClientProxy,
-    private readonly prismaService: PrismaService,
-  ) {}
+  constructor(private readonly prismaService: PrismaService) {}
 
-  async createResetToken(userId: number): Promise<ResetPassword> {
+  /**
+   * Create a new record about reset password for a user
+   *
+   * @param {number} userId
+   * @returns {Promise<ResetPassword>}
+   */
+  async createReset(userId: number): Promise<ResetPassword> {
     const token = randomString();
     return await this.prismaService.resetPassword.create({
       data: {
@@ -23,7 +22,13 @@ export class ResetPasswordService {
     });
   }
 
-  async findUserToken(userId: number): Promise<ResetPassword | null> {
+  /**
+   * Find reset password record by user id
+   *
+   * @param {number} userId
+   * @returns {Promise<ResetPassword | null>}
+   */
+  async findResetByUserId(userId: number): Promise<ResetPassword | null> {
     return await this.prismaService.resetPassword.findFirst({
       where: {
         userId,
@@ -32,7 +37,28 @@ export class ResetPasswordService {
     });
   }
 
-  async deleteToken(id: number): Promise<ResetPassword> {
+  /**
+   * Find reset password record by token
+   *
+   * @param {string} token
+   * @returns {Promise<ResetPassword | null>}
+   */
+  async findResetByToken(token: string): Promise<ResetPassword | null> {
+    return await this.prismaService.resetPassword.findFirst({
+      where: {
+        token,
+        deletedAt: null,
+      },
+    });
+  }
+
+  /**
+   * Invalidate reset password record by id
+   *
+   * @param {number} id
+   * @returns {Promise<ResetPassword>}
+   */
+  async invalidateReset(id: number): Promise<ResetPassword> {
     return await this.prismaService.resetPassword.update({
       where: {
         id,
@@ -41,19 +67,5 @@ export class ResetPasswordService {
         deletedAt: new Date(),
       },
     });
-  }
-
-  async sendResetEmail(email: string) {
-    const token = randomString();
-    return this.notificationsService
-      .send('reset-password-notification', {
-        email,
-        token,
-      })
-      .pipe(
-        map((response) => {
-          return response;
-        }),
-      );
   }
 }

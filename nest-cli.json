@@ -50,6 +50,8 @@
       "entryFile": "main",
       "sourceRoot": "apps/notifications/src",
       "compilerOptions": {
+        "assets": ["apps/notifications/templates/**/*"],
+        "watchAssets": true,
         "tsConfigPath": "apps/notifications/tsconfig.app.json"
       }
     },

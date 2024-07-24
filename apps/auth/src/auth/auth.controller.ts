@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Get,
@@ -17,6 +18,9 @@ import { User } from '.prisma/client';
 import { CreateUserDto } from '../utils/dto/create-user.dto';
 import { UsersService } from '../users/users.service';
 import { ResetPasswordService } from '../reset-password/reset-password.service';
+import { ForgotPasswordDto } from './dto/forgot-password.dto';
+import { ResetPasswordDto } from './dto/reset-password.dto';
+import { ResetPasswordEmitterService } from '../reset-password/reset-password-emitter.service';
 
 @Controller('auth')
 export class AuthController {
@@ -24,6 +28,7 @@ export class AuthController {
     private readonly authService: AuthService,
     private readonly usersService: UsersService,
     private readonly resetPasswordService: ResetPasswordService,
+    private readonly resetPasswordEmitterService: ResetPasswordEmitterService,
   ) {}
 
   @UseGuards(LocalAuthGuard)
@@ -38,7 +43,9 @@ export class AuthController {
 
   @Post('register')
   async register(@Body() body: CreateUserDto) {
-    return await this.authService.register(body);
+    const result = await this.authService.register(body);
+    await this.resetPasswordEmitterService.registrationEmail(body.email);
+    return result;
   }
 
   @UseGuards(JwtAuthGuard)
@@ -60,7 +67,57 @@ export class AuthController {
   }
 
   @Post('forgot-password')
-  async forgotPassword(@Body() body: { email: string }) {
-    return await this.resetPasswordService.sendResetEmail(body.email);
+  async forgotPassword(@Body() body: ForgotPasswordDto) {
+    const user = await this.usersService.findByEmail(body.email);
+
+    if (user) {
+      const resetData = await this.resetPasswordService.findResetByUserId(
+        user.id,
+      );
+
+      if (resetData) {
+        await this.resetPasswordService.invalidateReset(resetData.id);
+      }
+
+      const { token } = await this.resetPasswordService.createReset(user.id);
+
+      return await this.resetPasswordEmitterService.resetPasswordEmail(
+        body.email,
+        token,
+      );
+    }
+
+    return {
+      message: 'Email not found',
+    };
+  }
+
+  @Post('reset-password')
+  async resetPassowrd(@Body() body: ResetPasswordDto) {
+    const resetData = await this.resetPasswordService.findResetByToken(
+      body.token,
+    );
+
+    if (!resetData) {
+      throw new BadRequestException();
+    }
+
+    const user = await this.usersService.findOne(resetData.userId);
+
+    if (!user) {
+      throw new BadRequestException();
+    }
+
+    const result = await this.usersService.update(user.id, {
+      password: body.password,
+    });
+
+    await this.resetPasswordService.invalidateReset(resetData.id);
+
+    await this.resetPasswordEmitterService.resetPasswordSuccessEmail(
+      user.email,
+    );
+
+    return result;
   }
 }

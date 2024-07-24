@@ -4,6 +4,7 @@ import { PrismaModule } from '../prisma/prisma.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { NOTIFICATION_SERVICE } from '@app/common';
+import { ResetPasswordEmitterService } from './reset-password-emitter.service';
 
 @Module({
   imports: [
@@ -23,7 +24,7 @@ import { NOTIFICATION_SERVICE } from '@app/common';
       },
     ]),
   ],
-  providers: [ResetPasswordService],
-  exports: [ResetPasswordService],
+  providers: [ResetPasswordService, ResetPasswordEmitterService],
+  exports: [ResetPasswordService, ResetPasswordEmitterService],
 })
 export class ResetPasswordModule {}

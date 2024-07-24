@@ -27,6 +27,9 @@ import { MailerModule } from '@nestjs-modules/mailer';
               pass: configService.get('SMTP_PASS'),
             },
           },
+          defaults: {
+            from: '"No Reply" <noreply@example.com>',
+          },
         };
       },
       inject: [ConfigService],

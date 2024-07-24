@@ -17,6 +17,12 @@ export class AuthService {
     private readonly prismaService: PrismaService,
   ) {}
 
+  /**
+   * Login user
+   *
+   * @param {User} user
+   * @param {Response} response
+   */
   async login(user: User, response: Response) {
     const tokenPayload: TokenPayload = {
       userId: user.id,
@@ -36,6 +42,12 @@ export class AuthService {
     });
   }
 
+  /**
+   * Register a new user
+   *
+   * @param {CreateUserDto} data
+   * @returns {Promise<User>}
+   */
   async register(data: CreateUserDto): Promise<User> {
     const password = await this.hashService.hash(data.password);
 

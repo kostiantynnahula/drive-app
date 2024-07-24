@@ -1,5 +1,5 @@
 import { NestFactory } from '@nestjs/core';
-import { NotificationsModule } from './notifications.module';
+import { NotificationsModule } from './notifications/notifications.module';
 import { ConfigService } from '@nestjs/config';
 import { Transport } from '@nestjs/microservices';
 import { Logger } from 'nestjs-pino';
