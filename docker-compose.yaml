@@ -76,6 +76,18 @@ services:
       - '3003:3003'
     volumes:
       - .:/usr/src/app
+  files:
+    build:
+      context: .
+      dockerfile: ./apps/files/Dockerfile
+      target: development
+    command: npm run start:dev files
+    env_file:
+      - ./apps/files/.env
+    ports:
+      - '3007:3007'
+    volumes:
+      - .:/usr/src/app
   postgres:
     image: postgres
     ports:

@@ -50,7 +50,9 @@
       "entryFile": "main",
       "sourceRoot": "apps/notifications/src",
       "compilerOptions": {
-        "assets": ["apps/notifications/templates/**/*"],
+        "assets": [
+          "apps/notifications/templates/**/*"
+        ],
         "watchAssets": true,
         "tsConfigPath": "apps/notifications/tsconfig.app.json"
       }
@@ -62,6 +64,15 @@
       "sourceRoot": "apps/lessons/src",
       "compilerOptions": {
         "tsConfigPath": "apps/lessons/tsconfig.app.json"
+      }
+    },
+    "files": {
+      "type": "application",
+      "root": "apps/files",
+      "entryFile": "main",
+      "sourceRoot": "apps/files/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/files/tsconfig.app.json"
       }
     }
   },
