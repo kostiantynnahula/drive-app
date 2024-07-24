@@ -11,12 +11,14 @@ describe('OrganizationsController', () => {
       providers: [OrganizationsService],
     }).compile();
 
-    organizationsController = app.get<OrganizationsController>(OrganizationsController);
+    organizationsController = app.get<OrganizationsController>(
+      OrganizationsController,
+    );
   });
 
   describe('root', () => {
     it('should return "Hello World!"', () => {
-      expect(organizationsController.getHello()).toBe('Hello World!');
+      expect(organizationsController.list()).toBe('Hello World!');
     });
   });
 });

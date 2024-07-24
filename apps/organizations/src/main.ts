@@ -1,5 +1,5 @@
 import { NestFactory } from '@nestjs/core';
-import { OrganizationsModule } from './organizations.module';
+import { OrganizationsModule } from './organizations/organizations.module';
 import { ConfigService } from '@nestjs/config';
 import { Transport } from '@nestjs/microservices';
 import { ValidationPipe } from '@nestjs/common';

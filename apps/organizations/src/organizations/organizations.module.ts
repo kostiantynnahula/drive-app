@@ -4,6 +4,7 @@ import { OrganizationsService } from './organizations.service';
 import { LoggerModule } from '@app/common';
 import { ConfigModule } from '@nestjs/config';
 import * as Joi from 'joi';
+import { PrismaModule } from '../prisma/prisma.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import * as Joi from 'joi';
         TCP_PORT: Joi.number().required(),
       }),
     }),
+    PrismaModule,
   ],
   controllers: [OrganizationsController],
   providers: [OrganizationsService],
