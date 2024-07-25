@@ -1,14 +1,35 @@
-import { Controller, Post } from '@nestjs/common';
+import {
+  Controller,
+  FileTypeValidator,
+  MaxFileSizeValidator,
+  Param,
+  ParseFilePipe,
+  Post,
+  UseInterceptors,
+  UploadedFile,
+} from '@nestjs/common';
 import { UsersService } from './users.service';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly service: UsersService) {}
 
   @Post('upload/:id/logo')
-  async uploadLogo() {
-    // upload logo
-
-    return await this.service.updateUserLogo(1, 'path');
+  @UseInterceptors(FileInterceptor('file'))
+  async uploadLogo(
+    @Param('id') id: number,
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [
+          new MaxFileSizeValidator({ maxSize: 1024 * 1024 }),
+          new FileTypeValidator({ fileType: 'image/*' }),
+        ],
+      }),
+    )
+    file: any,
+  ) {
+    const logo = await this.service.upload(file.originalname, file.buffer);
+    return await this.service.updateUserLogo(id, logo);
   }
 }

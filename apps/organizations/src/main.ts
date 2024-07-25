@@ -1,13 +1,17 @@
 import { NestFactory } from '@nestjs/core';
-import { OrganizationsModule } from './organizations/organizations.module';
 import { ConfigService } from '@nestjs/config';
 import { Transport } from '@nestjs/microservices';
 import { ValidationPipe } from '@nestjs/common';
 import * as cookieParser from 'cookie-parser';
+import { AppModule } from './app.module';
+import { useContainer } from 'class-validator';
 
 async function bootstrap() {
-  const app = await NestFactory.create(OrganizationsModule);
+  const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService);
+
+  useContainer(app.select(AppModule), { fallbackOnErrors: true });
+
   app.connectMicroservice({
     transport: Transport.TCP,
     options: {
@@ -16,7 +20,18 @@ async function bootstrap() {
     },
   });
   app.use(cookieParser());
-  app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      transform: true,
+      forbidUnknownValues: true,
+      skipMissingProperties: true,
+      validationError: {
+        target: true,
+        value: true,
+      },
+    }),
+  );
   await app.startAllMicroservices();
   await app.listen(configService.get('HTTP_PORT'));
 }

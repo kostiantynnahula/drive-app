@@ -49,6 +49,12 @@ export class OrganizationsController {
 
   @Delete(':id')
   async deleteOne(@Param('id') id: string) {
-    return await this.organizationsService.deleteOne(id);
+    const organization = await this.organizationsService.findOne(id);
+
+    if (!organization) {
+      throw new NotFoundException('Organization not found');
+    }
+
+    return await this.organizationsService.deleteOne(organization);
   }
 }

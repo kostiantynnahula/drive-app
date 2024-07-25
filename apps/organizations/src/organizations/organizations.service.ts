@@ -38,10 +38,18 @@ export class OrganizationsService {
     });
   }
 
-  async deleteOne(id: string): Promise<Organization> {
+  async deleteOne(organization: Organization): Promise<Organization> {
+    const time = new Date().getTime();
+    const { name, email, phone } = organization;
+
     return await this.prismaService.organization.update({
-      where: { id },
-      data: { deletedAt: new Date() },
+      where: { id: organization.id },
+      data: {
+        deletedAt: new Date(),
+        name: `${name}-${time}`,
+        email: `${email}-${time}`,
+        phone: `${phone}-${time}`,
+      },
     });
   }
 }
