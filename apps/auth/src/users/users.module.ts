@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { UsersController } from './users.controller';
+import { UsersEventController } from './users.event.controller';
 import { UsersService } from './users.service';
 import { PrismaModule } from '../prisma/prisma.module';
 import { HashService } from '../utils/services/hash.service';
@@ -8,7 +9,7 @@ import { UniquePhoneValidator } from '../utils/validators/unique-phone.validator
 
 @Module({
   imports: [PrismaModule],
-  controllers: [UsersController],
+  controllers: [UsersController, UsersEventController],
   providers: [
     UsersService,
     HashService,
