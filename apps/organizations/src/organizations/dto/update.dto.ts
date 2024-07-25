@@ -11,4 +11,7 @@ export class UpdateOrganizationDto extends PartialType(CreateOrganizationDto) {
 
   @IsOptional()
   phone?: string;
+
+  @IsOptional()
+  logo?: string;
 }

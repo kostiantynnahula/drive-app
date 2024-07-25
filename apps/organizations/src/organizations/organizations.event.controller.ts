@@ -19,6 +19,6 @@ export class OrganizationsEventController {
       };
     }
 
-    // return await this.service.updateOne(organizationId, { logo });
+    return await this.service.updateOne(organizationId, { logo });
   }
 }

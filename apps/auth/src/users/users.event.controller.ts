@@ -18,6 +18,6 @@ export class UsersEventController {
       };
     }
 
-    // return await this.service.updateOne(userId, { logo });
+    return await this.service.update(userId, { logo });
   }
 }
