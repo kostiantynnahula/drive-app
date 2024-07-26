@@ -10,28 +10,26 @@ datasource db {
 }
 
 model User {
-  id            Int             @id @default(autoincrement())
-  firstName     String
-  lastName      String
-  password      String
-  email         String          @unique
-  phone         String          @unique
-  gender        Gender          @default(MALE)
-  role          Role            @default(USER)
-  logo          String?
-  createdAt     DateTime        @default(now())
-  updatedAt     DateTime        @updatedAt
-  ResetPassword ResetPassword[]
-}
+  id String @id @default(cuid()) @db.Uuid
 
-model ResetPassword {
-  id        Int       @id @default(autoincrement())
-  token     String    @unique
-  userId    Int
-  user      User      @relation(fields: [userId], references: [id])
+  firstName String @db.VarChar(45)
+  lastName  String @db.VarChar(45)
+  password  String @db.VarChar(45)
+  email     String @unique @db.VarChar(45)
+  phone     String @unique @db.VarChar(45)
+
+  gender Gender @default(MALE)
+  role   Role   @default(USER)
+
+  logo String?
+
+  organizationId String?
+
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   deletedAt DateTime?
+
+  @@index([organizationId, createdAt(sort: Desc)])
 }
 
 enum Role {

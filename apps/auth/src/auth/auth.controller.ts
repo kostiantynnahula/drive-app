@@ -17,10 +17,10 @@ import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { User } from '.prisma/client';
 import { CreateUserDto } from '../utils/dto/create-user.dto';
 import { UsersService } from '../users/users.service';
-import { ResetPasswordService } from '../reset-password/reset-password.service';
+import { ResetPasswordService } from '../../../reset-password/src/reset-password/reset-password.service';
 import { ForgotPasswordDto } from './dto/forgot-password.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
-import { ResetPasswordEmitterService } from '../reset-password/reset-password-emitter.service';
+import { ResetPasswordEmitterService } from '../../../reset-password/src/reset-password/reset-password-emitter.service';
 
 @Controller('auth')
 export class AuthController {

@@ -2,7 +2,7 @@ import { IsDefined } from 'class-validator';
 
 export class UpdateLogoDto {
   @IsDefined()
-  userId: number;
+  userId: string;
 
   @IsDefined()
   logo: string;

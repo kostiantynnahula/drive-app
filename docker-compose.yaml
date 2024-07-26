@@ -105,6 +105,23 @@ services:
       - '3009:3009'
     volumes:
       - .:/usr/src/app
+  reset-password:
+    build:
+      context: .
+      dockerfile: ./apps/cars/Dockerfile
+      target: development
+    command: sh -c "
+      pnpm prisma migrate deploy --schema apps/reset-password/prisma/schema.prisma &&
+      pnpm prisma generate --schema apps/reset-password/prisma/schema.prisma &&
+      pnpm run start:dev reset-password"
+    depends_on:
+      - postgres
+    env_file:
+      - ./apps/reset-password/.env
+    ports:
+      - '3011:3011'
+    volumes:
+      - .:/usr/src/app
   postgres:
     image: postgres
     ports:

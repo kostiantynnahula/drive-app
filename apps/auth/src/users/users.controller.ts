@@ -27,7 +27,7 @@ export class UsersController {
   }
 
   @Get(':id')
-  async getOne(@Param('id') id: number) {
+  async getOne(@Param('id') id: string) {
     const user = await this.service.findOne(id);
 
     if (!user) {
@@ -43,7 +43,7 @@ export class UsersController {
   }
 
   @Patch(':id')
-  async updateOne(@Param('id') id: number, @Body() body: Partial<User>) {
+  async updateOne(@Param('id') id: string, @Body() body: Partial<User>) {
     const user = await this.service.findOne(id);
 
     if (!user) {
@@ -54,7 +54,7 @@ export class UsersController {
   }
 
   @Delete(':id')
-  async deleteOne(@Param('id') id: number) {
+  async deleteOne(@Param('id') id: string) {
     const user = await this.service.findOne(id);
 
     if (!user) {

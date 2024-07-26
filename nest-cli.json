@@ -83,6 +83,15 @@
       "compilerOptions": {
         "tsConfigPath": "apps/cars/tsconfig.app.json"
       }
+    },
+    "reset-password": {
+      "type": "application",
+      "root": "apps/reset-password",
+      "entryFile": "main",
+      "sourceRoot": "apps/reset-password/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/reset-password/tsconfig.app.json"
+      }
     }
   },
   "monorepo": true,

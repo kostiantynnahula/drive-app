@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
 import { ResetPassword } from '.prisma/client';
 import { randomString } from '@app/common';
+import { PrismaService } from '../prisma/prisma.service';
 @Injectable()
 export class ResetPasswordService {
   constructor(private readonly prismaService: PrismaService) {}
@@ -12,7 +12,7 @@ export class ResetPasswordService {
    * @param {number} userId
    * @returns {Promise<ResetPassword>}
    */
-  async createReset(userId: number): Promise<ResetPassword> {
+  async createReset(userId: string): Promise<ResetPassword> {
     const token = randomString();
     return await this.prismaService.resetPassword.create({
       data: {
@@ -28,7 +28,7 @@ export class ResetPasswordService {
    * @param {number} userId
    * @returns {Promise<ResetPassword | null>}
    */
-  async findResetByUserId(userId: number): Promise<ResetPassword | null> {
+  async findResetByUserId(userId: string): Promise<ResetPassword | null> {
     return await this.prismaService.resetPassword.findFirst({
       where: {
         userId,
@@ -58,7 +58,7 @@ export class ResetPasswordService {
    * @param {number} id
    * @returns {Promise<ResetPassword>}
    */
-  async invalidateReset(id: number): Promise<ResetPassword> {
+  async invalidateReset(id: string): Promise<ResetPassword> {
     return await this.prismaService.resetPassword.update({
       where: {
         id,

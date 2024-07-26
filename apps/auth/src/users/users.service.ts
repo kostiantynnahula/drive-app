@@ -18,7 +18,7 @@ export class UsersService {
     return this.prismaService.user.create({ data: { ...data, password } });
   }
 
-  async update(id: number, data: Partial<User>): Promise<User> {
+  async update(id: string, data: Partial<User>): Promise<User> {
     if (data.password) {
       data.password = await this.hashService.hash(data.password);
     }
@@ -31,7 +31,7 @@ export class UsersService {
     return result;
   }
 
-  async remove(id: number): Promise<User> {
+  async remove(id: string): Promise<User> {
     return this.prismaService.user.delete({ where: { id } });
   }
 
@@ -45,7 +45,7 @@ export class UsersService {
     return result;
   }
 
-  async findOne(id: number): Promise<User> {
+  async findOne(id: string): Promise<User> {
     return await this.prismaService.user.findFirst({ where: { id } });
   }
 
@@ -67,7 +67,7 @@ export class UsersService {
 
   async getUser({ id }: GetUserDto) {
     return await this.prismaService.user.findFirstOrThrow({
-      where: { id: +id },
+      where: { id: id },
     });
   }
 

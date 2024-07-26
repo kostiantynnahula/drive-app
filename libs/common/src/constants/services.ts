@@ -4,6 +4,7 @@ export const NOTIFICATION_SERVICE = 'notifications';
 export const ORGANIZATION_SERVICE = 'organizations';
 export const FILES_SERVICE = 'files';
 export const CARS_SERVICE = 'cars';
+export const RESET_PASSWORD = 'reset-password';
 
 // NOTIFICATIONS SERVICE MESSAGES
 export const RESET_PASSWORD_EMAIL = 'reset-password';
