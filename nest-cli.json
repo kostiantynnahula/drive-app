@@ -74,6 +74,15 @@
       "compilerOptions": {
         "tsConfigPath": "apps/files/tsconfig.app.json"
       }
+    },
+    "cars": {
+      "type": "application",
+      "root": "apps/cars",
+      "entryFile": "main",
+      "sourceRoot": "apps/cars/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/cars/tsconfig.app.json"
+      }
     }
   },
   "monorepo": true,

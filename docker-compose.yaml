@@ -1,4 +1,21 @@
 services:
+  lessons:
+    build:
+      context: .
+      dockerfile: ./apps/lessons/Dockerfile
+      target: development
+    command: sh -c "
+      pnpm prisma migrate deploy --schema apps/lessons/prisma/schema.prisma &&
+      pnpm prisma generate --schema apps/lessons/prisma/schema.prisma &&
+      pnpm run start:dev lessons"
+    depends_on:
+      - postgres
+    env_file:
+      - ./apps/lessons/.env
+    ports:
+      - '3000:3000'
+    volumes:
+      - .:/usr/src/app
   auth:
     build:
       context: .
@@ -14,6 +31,18 @@ services:
       - ./apps/auth/.env
     ports:
       - '3001:3001'
+    volumes:
+      - .:/usr/src/app
+  payments:
+    build:
+      context: .
+      dockerfile: ./apps/payments/Dockerfile
+      target: development
+    command: npm run start:dev payments
+    env_file:
+      - ./apps/payments/.env
+    ports:
+      - '3003:3003'
     volumes:
       - .:/usr/src/app
   organizations:
@@ -33,23 +62,6 @@ services:
       - '3004:3004'
     volumes:
       - .:/usr/src/app
-  lessons:
-    build:
-      context: .
-      dockerfile: ./apps/lessons/Dockerfile
-      target: development
-    command: sh -c "
-      pnpm prisma migrate deploy --schema apps/lessons/prisma/schema.prisma &&
-      pnpm prisma generate --schema apps/lessons/prisma/schema.prisma &&
-      pnpm run start:dev lessons"
-    depends_on:
-      - postgres
-    env_file:
-      - ./apps/lessons/.env
-    ports:
-      - '3000:3000'
-    volumes:
-      - .:/usr/src/app
   notifications:
     build:
       context: .
@@ -64,18 +76,6 @@ services:
       - '3006:3006'
     volumes:
       - .:/usr/src/app
-  payments:
-    build:
-      context: .
-      dockerfile: ./apps/payments/Dockerfile
-      target: development
-    command: npm run start:dev payments
-    env_file:
-      - ./apps/payments/.env
-    ports:
-      - '3003:3003'
-    volumes:
-      - .:/usr/src/app
   files:
     build:
       context: .
@@ -86,6 +86,23 @@ services:
       - ./apps/files/.env
     ports:
       - '3007:3007'
+    volumes:
+      - .:/usr/src/app
+  cars:
+    build:
+      context: .
+      dockerfile: ./apps/cars/Dockerfile
+      target: development
+    command: sh -c "
+      pnpm prisma migrate deploy --schema apps/cars/prisma/schema.prisma &&
+      pnpm prisma generate --schema apps/cars/prisma/schema.prisma &&
+      pnpm run start:dev cars"
+    depends_on:
+      - postgres
+    env_file:
+      - ./apps/cars/.env
+    ports:
+      - '3009:3009'
     volumes:
       - .:/usr/src/app
   postgres:
