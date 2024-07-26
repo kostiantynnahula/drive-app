@@ -1,4 +1,4 @@
-import { AUTH_SERVICE, UPDATE_USER_LOGO } from '@app/common';
+import { AUTH_SERVICE, AuthServiceEvents } from '@app/common';
 import { Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ClientProxy } from '@nestjs/microservices';
@@ -16,10 +16,13 @@ export class UsersService extends S3Service {
   }
 
   async updateUserLogo(userId: number, logo: string) {
-    const message = this.authServiceClient.send(UPDATE_USER_LOGO, {
-      userId,
-      logo,
-    });
+    const message = this.authServiceClient.send(
+      AuthServiceEvents.UPDATE_USER_LOGO,
+      {
+        userId,
+        logo,
+      },
+    );
 
     const result = await firstValueFrom(message);
 

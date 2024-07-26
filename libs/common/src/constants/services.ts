@@ -12,7 +12,17 @@ export const SUCCESSFUL_REGISTER_EMAIL = 'successful-register';
 export const SUCCESSFUL_RESET_PASSWORD_EMAIL = 'success-register-password';
 
 // AUTH SERViCE MESSAGES
-export const UPDATE_USER_LOGO = 'update-user-logo';
+export enum AuthServiceEvents {
+  UPDATE_USER_LOGO,
+  ADD_USER_TO_ORGANIZATION,
+  REMOVE_USER_FROM_ORGANIZATION,
+  FIND_USER_BY_ORGANIZATION,
+  FIND_USERS_BY_ORGANIZATION,
+}
 
 // ORGANIZATION SERVICE MESSAGES
 export const UPDATE_ORGANIZATION_LOGO = 'update-organization-logo';
+export enum OrganizationServiceEvents {
+  FIND_ORGANIZATION,
+  UPDATE_ORGANIZATION_LOGO,
+}

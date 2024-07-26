@@ -1,6 +1,27 @@
 export interface User {
   id: number;
+  firstName: string;
+  lastName: string;
   email: string;
+  phone: string;
+  gender: Gender;
   password: string;
-  roles: string[];
+  role: Role;
+  logo: string;
+  organizationId: string;
+  createdAt: Date;
+  updatedAt: Date;
+  deletedAt: Date;
+}
+
+enum Gender {
+  MALE,
+  FEMALE,
+}
+
+enum Role {
+  USER,
+  INSTRUCTOR,
+  ADMIN,
+  SUPERADMIN,
 }

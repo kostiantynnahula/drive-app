@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ResetPasswordService } from './reset-password.service';
 import { PrismaModule } from '../prisma/prisma.module';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigService } from '@nestjs/config';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { NOTIFICATION_SERVICE } from '@app/common';
 import { ResetPasswordEmitterService } from './reset-password-emitter.service';
@@ -9,7 +9,6 @@ import { ResetPasswordEmitterService } from './reset-password-emitter.service';
 @Module({
   imports: [
     PrismaModule,
-    ConfigModule.forRoot({}),
     ClientsModule.registerAsync([
       {
         name: NOTIFICATION_SERVICE,
