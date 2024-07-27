@@ -1,7 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
 import { Transport } from '@nestjs/microservices';
-import { Logger } from 'nestjs-pino';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
@@ -14,7 +13,6 @@ async function bootstrap() {
       port: configService.get('TCP_PORT'),
     },
   });
-  app.useLogger(app.get(Logger));
   await app.startAllMicroservices();
 }
 bootstrap();

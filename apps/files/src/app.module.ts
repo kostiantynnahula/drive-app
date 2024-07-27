@@ -3,11 +3,9 @@ import { OrganizationModule } from './organization/organization.module';
 import { UsersModule } from './users/users.module';
 import { ConfigModule } from '@nestjs/config';
 import * as Joi from 'joi';
-import { LoggerModule } from '@app/common';
 
 @Module({
   imports: [
-    LoggerModule,
     OrganizationModule,
     UsersModule,
     ConfigModule.forRoot({

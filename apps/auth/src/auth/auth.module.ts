@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
-import { LoggerModule, RESET_PASSWORD_SERVICE } from '@app/common';
+import { RESET_PASSWORD_SERVICE } from '@app/common';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { LocalStategy } from './strategies/local.strategy';
@@ -18,7 +18,6 @@ import { NotificationsModule } from '../notifications/notifications.module';
 
 @Module({
   imports: [
-    LoggerModule,
     PrismaModule,
     NotificationsModule,
     JwtModule.registerAsync({
