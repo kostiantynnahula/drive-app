@@ -1,8 +1,9 @@
+import { Organization } from '@app/common';
 import { IsDefined, IsString } from 'class-validator';
 
-export class OrganizationUserDto {
+export class OrganizationAssignDto {
   @IsDefined()
-  organizationId: string;
+  organization: Organization;
 
   @IsDefined()
   @IsString()

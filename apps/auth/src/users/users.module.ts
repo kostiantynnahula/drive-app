@@ -9,6 +9,7 @@ import { UniquePhoneValidator } from '../utils/validators/unique-phone.validator
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { ORGANIZATION_SERVICE } from '@app/common';
 import { ConfigService } from '@nestjs/config';
+import { NotificationsModule } from '../notifications/notifications.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { ConfigService } from '@nestjs/config';
         inject: [ConfigService],
       },
     ]),
+    NotificationsModule,
   ],
   controllers: [UsersController, UsersTcpController],
   providers: [

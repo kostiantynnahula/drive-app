@@ -55,7 +55,7 @@ export class UsersController {
       throw new NotFoundException('Organization not found');
     }
 
-    return await this.service.addUserToOrganization(userId, organizationId);
+    return await this.service.addUserToOrganization(userId, organization);
   }
 
   @Delete(':organizationId/users/:userId')
@@ -70,9 +70,6 @@ export class UsersController {
       throw new NotFoundException('Organization not found');
     }
 
-    return await this.service.removeUserFromOrganization(
-      userId,
-      organizationId,
-    );
+    return await this.service.removeUserFromOrganization(userId, organization);
   }
 }

@@ -1,5 +1,6 @@
 import { MailerService } from '@nestjs-modules/mailer';
 import { Injectable } from '@nestjs/common';
+import { OrganizationDto } from './dto/organization.dto';
 
 @Injectable()
 export class NotificationsService {
@@ -51,6 +52,38 @@ export class NotificationsService {
       html: `<div>
         <h1>Password was changed succsfully</h1>
         <p>Your password was changed successfully</p>
+      </div>`,
+    });
+  }
+
+  async userAddedToOrganizationNotification({
+    from,
+    to,
+    organizationName,
+  }: OrganizationDto): Promise<void> {
+    await this.mailService.sendMail({
+      from,
+      to,
+      subject: `You was successfully added to <b>${organizationName}</b> organization`,
+      html: `<div>
+        <h1>You are a new member of ${organizationName} organization</h1>
+        <p>Congradulation! You are a new member of organization</p>
+      </div>`,
+    });
+  }
+
+  async userRemovedFromOrganizationNotification({
+    from,
+    to,
+    organizationName,
+  }: OrganizationDto): Promise<void> {
+    await this.mailService.sendMail({
+      from,
+      to,
+      subject: `You was removed from <b>${organizationName}</b> organization`,
+      html: `<div>
+        <h1>We are notifying you about organization changes!</h1>
+        <p>From this moment you are not a member of the ${organizationName} organization</p>
       </div>`,
     });
   }

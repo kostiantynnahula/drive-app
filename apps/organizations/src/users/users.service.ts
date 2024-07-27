@@ -1,4 +1,9 @@
-import { AUTH_SERVICE, AuthServiceEvents, User } from '@app/common';
+import {
+  AUTH_SERVICE,
+  AuthServiceEvents,
+  Organization,
+  User,
+} from '@app/common';
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
@@ -49,11 +54,11 @@ export class UsersService {
    */
   async addUserToOrganization(
     userId: string,
-    organizationId: string,
+    organization: Organization,
   ): Promise<User> {
     const message = await this.authServiceClient.send(
       AuthServiceEvents.ADD_USER_TO_ORGANIZATION,
-      { userId, organizationId },
+      { userId, organization },
     );
 
     return await firstValueFrom(message);
@@ -68,11 +73,11 @@ export class UsersService {
    */
   async removeUserFromOrganization(
     userId: string,
-    organizationId: string,
+    organization: Organization,
   ): Promise<User> {
     const message = this.authServiceClient.send(
       AuthServiceEvents.REMOVE_USER_FROM_ORGANIZATION,
-      { userId, organizationId },
+      { userId, organization },
     );
 
     return await firstValueFrom(message);
