@@ -23,6 +23,7 @@ model Organization {
   description String?
   logo        String?
   locations   Location[]
+  ownerId     String     @unique
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
   deletedAt   DateTime?

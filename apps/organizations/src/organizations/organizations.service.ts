@@ -42,8 +42,13 @@ export class OrganizationsService {
    * @param {CreateOrganizationDto} data
    * @returns {Promise<Organization>}
    */
-  async createOne(data: CreateOrganizationDto): Promise<Organization> {
-    return await this.prismaService.organization.create({ data });
+  async createOne(
+    data: CreateOrganizationDto,
+    ownerId: string,
+  ): Promise<Organization> {
+    return await this.prismaService.organization.create({
+      data: { ...data, ownerId },
+    });
   }
 
   /**

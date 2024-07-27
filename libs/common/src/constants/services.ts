@@ -13,6 +13,7 @@ export const SUCCESSFUL_RESET_PASSWORD_EMAIL = 'success-register-password';
 
 // AUTH SERViCE MESSAGES
 export enum AuthServiceEvents {
+  AUTHENTICATE,
   UPDATE_USER_LOGO,
   ADD_USER_TO_ORGANIZATION,
   REMOVE_USER_FROM_ORGANIZATION,

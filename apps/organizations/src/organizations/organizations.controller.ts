@@ -8,12 +8,14 @@ import {
   Patch,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { OrganizationsService } from './organizations.service';
 import { CreateOrganizationDto } from './dto/create.dto';
 import { UpdateOrganizationDto } from './dto/update.dto';
-import { PaginationQuery } from '@app/common';
+import { CurrentUser, JwtAuthGuard, PaginationQuery, User } from '@app/common';
 
+@UseGuards(JwtAuthGuard)
 @Controller('organizations')
 export class OrganizationsController {
   constructor(private readonly organizationsService: OrganizationsService) {}
@@ -35,8 +37,11 @@ export class OrganizationsController {
   }
 
   @Post()
-  async createOne(@Body() body: CreateOrganizationDto) {
-    return await this.organizationsService.createOne(body);
+  async createOne(
+    @Body() body: CreateOrganizationDto,
+    @CurrentUser() user: User,
+  ) {
+    return await this.organizationsService.createOne(body, user.id);
   }
 
   @Patch(':id')
