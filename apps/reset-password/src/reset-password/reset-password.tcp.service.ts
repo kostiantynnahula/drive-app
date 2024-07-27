@@ -9,7 +9,7 @@ import { ClientProxy } from '@nestjs/microservices';
 import { map } from 'rxjs';
 
 @Injectable()
-export class ResetPasswordEmitterService {
+export class ResetPasswordTcpService {
   constructor(
     @Inject(NOTIFICATION_SERVICE)
     private readonly notificationsService: ClientProxy,

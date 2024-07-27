@@ -9,31 +9,34 @@ export class ResetPasswordService {
   /**
    * Create a new record about reset password for a user
    *
-   * @param {number} userId
+   * @param {string} email
    * @returns {Promise<ResetPassword>}
    */
-  async createReset(userId: string): Promise<ResetPassword> {
+  async createReset(email: string): Promise<ResetPassword> {
     const token = randomString();
     return await this.prismaService.resetPassword.create({
       data: {
-        userId,
+        email,
         token,
       },
     });
   }
 
+  async findResetByEmail(email: string): Promise<ResetPassword | null> {
+    return await this.prismaService.resetPassword.findFirst({
+      where: { email, deletedAt: null },
+    });
+  }
+
   /**
-   * Find reset password record by user id
+   * Find token details
    *
-   * @param {number} userId
+   * @param {string} token
    * @returns {Promise<ResetPassword | null>}
    */
-  async findResetByUserId(userId: string): Promise<ResetPassword | null> {
+  async findTokenDetails(token: string): Promise<ResetPassword | null> {
     return await this.prismaService.resetPassword.findFirst({
-      where: {
-        userId,
-        deletedAt: null,
-      },
+      where: { token, deletedAt: null },
     });
   }
 
@@ -53,17 +56,20 @@ export class ResetPasswordService {
   }
 
   /**
-   * Invalidate reset password record by id
+   * Invalidate reset password record by email
    *
-   * @param {number} id
+   * @param {email} email
    * @returns {Promise<ResetPassword>}
    */
-  async invalidateReset(id: string): Promise<ResetPassword> {
+  async invalidateToken(token: string, email: string): Promise<ResetPassword> {
+    const expiredEmail = `${new Date().getTime()}-${email}`;
     return await this.prismaService.resetPassword.update({
       where: {
-        id,
+        email,
+        token,
       },
       data: {
+        email: expiredEmail,
         deletedAt: new Date(),
       },
     });

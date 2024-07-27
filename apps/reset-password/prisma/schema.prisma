@@ -10,10 +10,10 @@ datasource db {
 }
 
 model ResetPassword {
-  id String @id @default(cuid()) @db.Uuid
+  id String @id @default(cuid())
 
-  token  String @unique @db.VarChar(45)
-  userId String
+  token String @unique @db.VarChar(45)
+  email String @unique
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt

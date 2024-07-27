@@ -17,10 +17,10 @@ import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { User } from '.prisma/client';
 import { CreateUserDto } from '../utils/dto/create-user.dto';
 import { UsersService } from '../users/users.service';
-import { ResetPasswordService } from '../../../reset-password/src/reset-password/reset-password.service';
 import { ForgotPasswordDto } from './dto/forgot-password.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
-import { ResetPasswordEmitterService } from '../../../reset-password/src/reset-password/reset-password-emitter.service';
+import { ResetPasswordService } from './reset-password.service';
+import { NotificationsService } from '../notifications/notifications.service';
 
 @Controller('auth')
 export class AuthController {
@@ -28,7 +28,7 @@ export class AuthController {
     private readonly authService: AuthService,
     private readonly usersService: UsersService,
     private readonly resetPasswordService: ResetPasswordService,
-    private readonly resetPasswordEmitterService: ResetPasswordEmitterService,
+    private readonly notificationsService: NotificationsService,
   ) {}
 
   @UseGuards(LocalAuthGuard)
@@ -44,7 +44,7 @@ export class AuthController {
   @Post('register')
   async register(@Body() body: CreateUserDto) {
     const result = await this.authService.register(body);
-    // await this.resetPasswordEmitterService.registrationEmail(body.email);
+    await this.notificationsService.registration(body.email);
     return result;
   }
 
@@ -67,24 +67,17 @@ export class AuthController {
   }
 
   @Post('forgot-password')
-  async forgotPassword(@Body() body: ForgotPasswordDto) {
-    const user = await this.usersService.findByEmail(body.email);
+  async forgotPassword(@Body() { email }: ForgotPasswordDto) {
+    const user = await this.usersService.findByEmail(email);
 
     if (user) {
-      const resetData = await this.resetPasswordService.findResetByUserId(
-        user.id,
-      );
+      const result = await this.resetPasswordService.forgotPassword(email);
 
-      if (resetData) {
-        await this.resetPasswordService.invalidateReset(resetData.id);
-      }
+      await this.notificationsService.forgotPassword(email, result.token);
 
-      const { token } = await this.resetPasswordService.createReset(user.id);
-
-      return await this.resetPasswordEmitterService.resetPasswordEmail(
-        body.email,
-        token,
-      );
+      return {
+        message: 'Reset password email sent',
+      };
     }
 
     return {
@@ -93,30 +86,25 @@ export class AuthController {
   }
 
   @Post('reset-password')
-  async resetPassowrd(@Body() body: ResetPasswordDto) {
-    const resetData = await this.resetPasswordService.findResetByToken(
-      body.token,
-    );
+  async resetPassowrd(@Body() { token, password }: ResetPasswordDto) {
+    const tokenDetails =
+      await this.resetPasswordService.findTokenDetails(token);
 
-    if (!resetData) {
+    if (!tokenDetails) {
       throw new BadRequestException();
     }
 
-    const user = await this.usersService.findOne(resetData.userId);
+    const user = await this.usersService.findByEmail(tokenDetails.email);
 
     if (!user) {
       throw new BadRequestException();
     }
 
-    const result = await this.usersService.update(user.id, {
-      password: body.password,
-    });
+    const result = await this.usersService.update(user.id, { password });
 
-    await this.resetPasswordService.invalidateReset(resetData.id);
+    await this.resetPasswordService.invalidateToken(token, user.email);
 
-    await this.resetPasswordEmitterService.resetPasswordSuccessEmail(
-      user.email,
-    );
+    await this.notificationsService.resetPassword(user.email);
 
     return result;
   }

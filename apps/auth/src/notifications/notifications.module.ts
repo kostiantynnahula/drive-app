@@ -1,15 +1,11 @@
 import { Module } from '@nestjs/common';
-import { ResetPasswordService } from './reset-password.service';
-import { PrismaModule } from '../prisma/prisma.module';
-import { ConfigService } from '@nestjs/config';
+import { NotificationsService } from './notifications.service';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { NOTIFICATION_SERVICE } from '@app/common';
-// import { ResetPasswordTcpService } from './reset-password.tcp.service';
-import { ResetPasswordTcpController } from './reset-password.tcp.controller';
+import { ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
-    PrismaModule,
     ClientsModule.registerAsync([
       {
         name: NOTIFICATION_SERVICE,
@@ -24,8 +20,7 @@ import { ResetPasswordTcpController } from './reset-password.tcp.controller';
       },
     ]),
   ],
-  controllers: [ResetPasswordTcpController],
-  providers: [ResetPasswordService],
-  exports: [ResetPasswordService],
+  providers: [NotificationsService],
+  exports: [NotificationsService],
 })
-export class ResetPasswordModule {}
+export class NotificationsModule {}

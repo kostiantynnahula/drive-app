@@ -4,7 +4,6 @@ import { ConfigService } from '@nestjs/config';
 import { useContainer } from 'class-validator';
 import { ValidationPipe } from '@nestjs/common';
 import { Transport } from '@nestjs/microservices';
-import * as cookieParser from 'cookie-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -19,7 +18,7 @@ async function bootstrap() {
       port: configService.get('TCP_PORT'),
     },
   });
-  app.use(cookieParser());
+
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
@@ -34,6 +33,5 @@ async function bootstrap() {
   );
 
   await app.startAllMicroservices();
-  await app.listen(configService.get('HTTP_PORT'));
 }
 bootstrap();
