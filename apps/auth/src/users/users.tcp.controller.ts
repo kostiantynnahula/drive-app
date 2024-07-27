@@ -51,7 +51,7 @@ export class UsersTcpController {
     return await this.service.findOneByOrganizationId(organizationId, userId);
   }
 
-  // @UsePipes(new ValidationPipe())
+  @UsePipes(new ValidationPipe())
   @MessagePattern(AuthServiceEvents.ADD_USER_TO_ORGANIZATION)
   async addToOrganization({ userId, organization }: OrganizationAssignDto) {
     const user = await this.service.findOne(userId);
@@ -77,7 +77,7 @@ export class UsersTcpController {
     return result;
   }
 
-  // @UsePipes(new ValidationPipe())
+  @UsePipes(new ValidationPipe())
   @MessagePattern(AuthServiceEvents.REMOVE_USER_FROM_ORGANIZATION)
   async deleteToOrganization({ userId, organization }: OrganizationAssignDto) {
     const user = await this.service.findOne(userId);

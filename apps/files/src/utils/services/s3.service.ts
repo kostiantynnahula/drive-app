@@ -38,4 +38,12 @@ export class S3Service {
 
     return getS3PublicUrl(bucket, key, region);
   }
+
+  async delete(key: string): Promise<void> {
+    const bucket = this.configService.get('AWS_S3_BUCKET_NAME');
+
+    await this.s3Client.send(
+      new PutObjectCommand({ Bucket: bucket, Key: key }),
+    );
+  }
 }

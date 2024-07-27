@@ -15,7 +15,7 @@ export class UsersService extends S3Service {
     super(configService, configService.get('AWS_S3_USER_FOLDER'));
   }
 
-  async updateUserLogo(userId: number, logo: string) {
+  async updateUserLogo(userId: string, logo: string) {
     const message = this.authServiceClient.send(
       AuthServiceEvents.UPDATE_USER_LOGO,
       {

@@ -26,4 +26,15 @@ export class OrganizationService extends S3Service {
 
     return await firstValueFrom(message);
   }
+
+  async findOrganization(organizationId: string) {
+    const message = this.organizationServiceClient.send(
+      OrganizationServiceEvents.FIND_ORGANIZATION,
+      {
+        organizationId,
+      },
+    );
+
+    return await firstValueFrom(message);
+  }
 }

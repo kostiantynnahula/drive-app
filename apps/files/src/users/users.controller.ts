@@ -18,7 +18,7 @@ export class UsersController {
   @Post('upload/:id/logo')
   @UseInterceptors(FileInterceptor('file'))
   async uploadLogo(
-    @Param('id') id: number,
+    @Param('id') id: string,
     @UploadedFile(
       new ParseFilePipe({
         validators: [

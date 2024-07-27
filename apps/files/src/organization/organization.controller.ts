@@ -2,6 +2,7 @@ import {
   Controller,
   FileTypeValidator,
   MaxFileSizeValidator,
+  NotFoundException,
   Param,
   ParseFilePipe,
   Post,
@@ -29,8 +30,16 @@ export class OrganizationController {
     )
     file: any,
   ) {
-    // TODO: Check is organization exists
+    const organization = await this.service.findOrganization(id);
+
+    if (!organization) {
+      throw new NotFoundException('Organization not found');
+    }
+
     const logo = await this.service.upload(file.originalname, file.buffer);
+
+    await this.service.delete(organization.logo);
+
     return await this.service.updateOrganizationLogo(id, logo);
   }
 }
