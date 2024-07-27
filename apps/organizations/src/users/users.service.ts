@@ -10,8 +10,14 @@ export class UsersService {
     private readonly authServiceClient: ClientProxy,
   ) {}
 
-  async findAll(organizationId: string): Promise<User[]> {
-    const message = this.authServiceClient.send(
+  /**
+   * Find all users related to organization
+   *
+   * @param {string} organizationId
+   * @returns {Promise<User[]>}
+   */
+  async findAll(organizationId: string): Promise<User> {
+    const message = await this.authServiceClient.send(
       AuthServiceEvents.FIND_USERS_BY_ORGANIZATION,
       { organizationId },
     );
@@ -19,6 +25,12 @@ export class UsersService {
     return await firstValueFrom(message);
   }
 
+  /**
+   * Find user by id related to organization
+   * @param {string} userId
+   * @param {string} organizationId
+   * @returns {Promise<User>}
+   */
   async findOne(userId: string, organizationId: string): Promise<User> {
     const message = this.authServiceClient.send(
       AuthServiceEvents.FIND_USER_BY_ORGANIZATION,
@@ -28,8 +40,18 @@ export class UsersService {
     return await firstValueFrom(message);
   }
 
-  async addUserToOrganization(userId: string, organizationId: string) {
-    const message = this.authServiceClient.send(
+  /**
+   * Add user to organization
+   *
+   * @param {string} userId
+   * @param {string} organizationId
+   * @returns {Promise<User>}
+   */
+  async addUserToOrganization(
+    userId: string,
+    organizationId: string,
+  ): Promise<User> {
+    const message = await this.authServiceClient.send(
       AuthServiceEvents.ADD_USER_TO_ORGANIZATION,
       { userId, organizationId },
     );
@@ -37,7 +59,17 @@ export class UsersService {
     return await firstValueFrom(message);
   }
 
-  async removeUserFromOrganization(userId: string, organizationId: string) {
+  /**
+   * Delete user from organization
+   *
+   * @param {string} userId
+   * @param {string} organizationId
+   * @returns {Promise<User>}
+   */
+  async removeUserFromOrganization(
+    userId: string,
+    organizationId: string,
+  ): Promise<User> {
     const message = this.authServiceClient.send(
       AuthServiceEvents.REMOVE_USER_FROM_ORGANIZATION,
       { userId, organizationId },

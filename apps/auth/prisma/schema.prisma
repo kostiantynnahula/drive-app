@@ -10,11 +10,11 @@ datasource db {
 }
 
 model User {
-  id String @id @default(cuid()) @db.Uuid
+  id String @id @default(cuid())
 
   firstName String @db.VarChar(45)
   lastName  String @db.VarChar(45)
-  password  String @db.VarChar(45)
+  password  String @db.VarChar(255)
   email     String @unique @db.VarChar(45)
   phone     String @unique @db.VarChar(45)
 

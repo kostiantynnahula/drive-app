@@ -44,7 +44,7 @@ export class AuthController {
   @Post('register')
   async register(@Body() body: CreateUserDto) {
     const result = await this.authService.register(body);
-    await this.resetPasswordEmitterService.registrationEmail(body.email);
+    // await this.resetPasswordEmitterService.registrationEmail(body.email);
     return result;
   }
 

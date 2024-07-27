@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ClientProxy } from '@nestjs/microservices';
-import { ORGANIZATION_SERVICE, UPDATE_ORGANIZATION_LOGO } from '@app/common';
+import { ORGANIZATION_SERVICE, OrganizationServiceEvents } from '@app/common';
 import { firstValueFrom } from 'rxjs';
 import { S3Service } from '../utils/services/s3.service';
 
@@ -17,15 +17,13 @@ export class OrganizationService extends S3Service {
 
   async updateOrganizationLogo(organizationId: string, logo: string) {
     const message = this.organizationServiceClient.send(
-      UPDATE_ORGANIZATION_LOGO,
+      OrganizationServiceEvents.UPDATE_ORGANIZATION_LOGO,
       {
         organizationId,
         logo,
       },
     );
 
-    const result = await firstValueFrom(message);
-
-    return result;
+    return await firstValueFrom(message);
   }
 }

@@ -22,7 +22,7 @@ model Organization {
   phone       String?
   description String?
   logo        String?
-  Locations   Location[]
+  locations   Location[]
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
   deletedAt   DateTime?

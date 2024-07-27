@@ -1,16 +1,16 @@
 import { Controller, UsePipes, ValidationPipe } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { EventPattern } from '@nestjs/microservices';
+import { MessagePattern } from '@nestjs/microservices';
 import { AuthServiceEvents } from '@app/common';
 import { UpdateLogoDto } from './dto/update-logo.dto';
 import { OrganizationUsersDto } from './dto/organization-users.dto';
 import { OrganizationUserDto } from './dto/organization-user.dto';
 
 @Controller()
-export class UsersControllerTCP {
+export class UsersTcpController {
   constructor(private readonly service: UsersService) {}
 
-  @EventPattern(AuthServiceEvents.UPDATE_USER_LOGO)
+  @MessagePattern(AuthServiceEvents.UPDATE_USER_LOGO)
   async updateUserLogo({ userId, logo }: UpdateLogoDto) {
     const user = await this.service.findOne(userId);
 
@@ -24,13 +24,13 @@ export class UsersControllerTCP {
   }
 
   @UsePipes(new ValidationPipe())
-  @EventPattern(AuthServiceEvents.FIND_USERS_BY_ORGANIZATION)
+  @MessagePattern(AuthServiceEvents.FIND_USERS_BY_ORGANIZATION)
   async findUsersByOrganization({ organizationId }: OrganizationUsersDto) {
     return await this.service.findAllByOrganizationId(organizationId);
   }
 
   @UsePipes(new ValidationPipe())
-  @EventPattern(AuthServiceEvents.FIND_USERS_BY_ORGANIZATION)
+  @MessagePattern(AuthServiceEvents.FIND_USER_BY_ORGANIZATION)
   async findUserByOrganization({
     organizationId,
     userId,
@@ -47,7 +47,7 @@ export class UsersControllerTCP {
   }
 
   @UsePipes(new ValidationPipe())
-  @EventPattern(AuthServiceEvents.ADD_USER_TO_ORGANIZATION)
+  @MessagePattern(AuthServiceEvents.ADD_USER_TO_ORGANIZATION)
   async addToOrganization({ organizationId, userId }: OrganizationUserDto) {
     const user = await this.service.findOne(userId);
 
@@ -61,7 +61,7 @@ export class UsersControllerTCP {
   }
 
   @UsePipes(new ValidationPipe())
-  @EventPattern(AuthServiceEvents.ADD_USER_TO_ORGANIZATION)
+  @MessagePattern(AuthServiceEvents.REMOVE_USER_FROM_ORGANIZATION)
   async deleteToOrganization({ userId }: Pick<OrganizationUserDto, 'userId'>) {
     const user = await this.service.findOne(userId);
 

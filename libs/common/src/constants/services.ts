@@ -21,7 +21,6 @@ export enum AuthServiceEvents {
 }
 
 // ORGANIZATION SERVICE MESSAGES
-export const UPDATE_ORGANIZATION_LOGO = 'update-organization-logo';
 export enum OrganizationServiceEvents {
   FIND_ORGANIZATION,
   UPDATE_ORGANIZATION_LOGO,

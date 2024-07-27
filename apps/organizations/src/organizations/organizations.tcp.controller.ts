@@ -5,7 +5,7 @@ import { OrganizationServiceEvents } from '@app/common';
 import { UpdateLogoDto } from './dto/update-logo.dto';
 
 @Controller()
-export class OrganizationsEventController {
+export class OrganizationsTcpController {
   constructor(private readonly service: OrganizationsService) {}
 
   @UsePipes(new ValidationPipe())

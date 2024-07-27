@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { UsersController } from './users.controller';
-import { UsersControllerTCP } from './users.controller.tcp';
+import { UsersTcpController } from './users.tcp.controller';
 import { UsersService } from './users.service';
 import { PrismaModule } from '../prisma/prisma.module';
 import { HashService } from '../utils/services/hash.service';
@@ -27,7 +27,7 @@ import { ConfigService } from '@nestjs/config';
       },
     ]),
   ],
-  controllers: [UsersController, UsersControllerTCP],
+  controllers: [UsersController, UsersTcpController],
   providers: [
     UsersService,
     HashService,
