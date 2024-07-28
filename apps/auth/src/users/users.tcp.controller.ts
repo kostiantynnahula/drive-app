@@ -98,4 +98,17 @@ export class UsersTcpController {
 
     return result;
   }
+
+  @MessagePattern(AuthServiceEvents.FIND_USER_BY_ID)
+  async findOne(id: string) {
+    const user = await this.service.findOne(id);
+
+    if (!user) {
+      return {
+        message: 'User not found',
+      };
+    }
+
+    return user;
+  }
 }
