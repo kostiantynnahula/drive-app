@@ -13,7 +13,8 @@ import {
 import { OrganizationsService } from './organizations.service';
 import { CreateOrganizationDto } from './dto/create.dto';
 import { UpdateOrganizationDto } from './dto/update.dto';
-import { CurrentUser, JwtAuthGuard, PaginationQuery, User } from '@app/common';
+import { CurrentUser, JwtAuthGuard, User } from '@app/common';
+import { SearchQuery } from './dto/search.query';
 
 @UseGuards(JwtAuthGuard)
 @Controller('organizations')
@@ -21,7 +22,7 @@ export class OrganizationsController {
   constructor(private readonly organizationsService: OrganizationsService) {}
 
   @Get()
-  async getMany(@Query() query: PaginationQuery) {
+  async getMany(@Query() query: SearchQuery) {
     return await this.organizationsService.findMany(query);
   }
 

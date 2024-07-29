@@ -3,7 +3,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { CreateOrganizationDto } from './dto/create.dto';
 import { UpdateOrganizationDto } from './dto/update.dto';
 import { Organization } from '.prisma/client';
-import { PaginationQuery } from '@app/common';
+import { SearchQuery } from './dto/search.query';
 
 @Injectable()
 export class OrganizationsService {
@@ -15,13 +15,38 @@ export class OrganizationsService {
    * @param {PaginationQuery} query
    * @returns {Promise<Organization[]>}
    */
-  async findMany(
-    organizationId: string,
-    query: PaginationQuery,
-  ): Promise<Organization[]> {
-    const { skip = 0, take = 10 } = query;
+  async findMany(query: SearchQuery): Promise<Organization[]> {
+    const {
+      skip = 0,
+      take = 10,
+      country,
+      city,
+      priceFrom,
+      priceTo,
+      lessonTypes,
+    } = query;
+
     return await this.prismaService.organization.findMany({
-      where: { deletedAt: null },
+      where: {
+        deletedAt: null,
+        locations: {
+          some: {
+            country,
+            city,
+          },
+        },
+        lessonsOptions: {
+          some: {
+            price: {
+              gte: priceFrom,
+              lte: priceTo,
+            },
+            lessonType: {
+              in: lessonTypes,
+            },
+          },
+        },
+      },
       include: {
         lessonsOptions: {
           select: {
@@ -45,8 +70,14 @@ export class OrganizationsService {
    */
   async findOne(id: string): Promise<Organization> {
     return await this.prismaService.organization.findFirst({
-      where: { id, deletedAt: null },
-      include: { lessonsOptions: true },
+      where: {
+        id,
+        deletedAt: null,
+      },
+      include: {
+        locations: true,
+        lessonsOptions: true,
+      },
     });
   }
 
