@@ -20,8 +20,4 @@ export class CreateLocationDto {
   @IsDefined()
   @IsString()
   city: string;
-
-  @IsDefined()
-  @IsString()
-  organizationId: string;
 }

@@ -15,7 +15,10 @@ export class OrganizationsService {
    * @param {PaginationQuery} query
    * @returns {Promise<Organization[]>}
    */
-  async findMany(query: PaginationQuery): Promise<Organization[]> {
+  async findMany(
+    organizationId: string,
+    query: PaginationQuery,
+  ): Promise<Organization[]> {
     const { skip = 0, take = 10 } = query;
     return await this.prismaService.organization.findMany({
       where: { deletedAt: null },
