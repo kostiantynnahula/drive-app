@@ -19,6 +19,16 @@ export class OrganizationsService {
     const { skip = 0, take = 10 } = query;
     return await this.prismaService.organization.findMany({
       where: { deletedAt: null },
+      include: {
+        lessonsOptions: {
+          select: {
+            id: true,
+            name: true,
+            lessonType: true,
+            price: true,
+          },
+        },
+      },
       take,
       skip,
     });
@@ -33,6 +43,7 @@ export class OrganizationsService {
   async findOne(id: string): Promise<Organization> {
     return await this.prismaService.organization.findFirst({
       where: { id, deletedAt: null },
+      include: { lessonsOptions: true },
     });
   }
 
@@ -47,7 +58,16 @@ export class OrganizationsService {
     ownerId: string,
   ): Promise<Organization> {
     return await this.prismaService.organization.create({
-      data: { ...data, ownerId },
+      data: {
+        name: data.name,
+        email: data.email,
+        phone: data.phone,
+        description: data.description,
+        ownerId,
+        lessonsOptions: {
+          create: data.lessonsOptions,
+        },
+      },
     });
   }
 
@@ -60,7 +80,7 @@ export class OrganizationsService {
    */
   async updateOne(
     id: string,
-    data: UpdateOrganizationDto,
+    data: Omit<UpdateOrganizationDto, 'lessonsOptions'>,
   ): Promise<Organization> {
     return await this.prismaService.organization.update({
       where: { id },

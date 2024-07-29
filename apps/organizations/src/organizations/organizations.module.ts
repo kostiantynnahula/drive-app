@@ -9,10 +9,12 @@ import { UniquePhoneValidator } from './validators/unique-phone.validator';
 import { ConfigService } from '@nestjs/config';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { AUTH_SERVICE } from '@app/common';
+import { LessonsOptionsModule } from '../lessons-options/lessons-options.module';
 
 @Module({
   imports: [
     PrismaModule,
+    LessonsOptionsModule,
     ClientsModule.registerAsync([
       {
         name: AUTH_SERVICE,

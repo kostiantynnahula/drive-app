@@ -3,6 +3,7 @@ import { OrganizationsModule } from './organizations/organizations.module';
 import { LocationsModule } from './locations/locations.module';
 import { ConfigModule } from '@nestjs/config';
 import { UsersModule } from './users/users.module';
+import { LessonsOptionsModule } from './lessons-options/lessons-options.module';
 import * as Joi from 'joi';
 
 @Module({
@@ -20,6 +21,7 @@ import * as Joi from 'joi';
     OrganizationsModule,
     LocationsModule,
     UsersModule,
+    LessonsOptionsModule,
   ],
   controllers: [],
   providers: [],
