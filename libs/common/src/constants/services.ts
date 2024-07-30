@@ -44,3 +44,15 @@ export enum NotificationsServiceEvents {
   USER_ADDED_TO_ORGANIZATION,
   USER_REMOVED_FROM_ORGANIZATION,
 }
+
+// CARS SERVICE MESSAGES
+export enum CarServiceEvents {
+  ADD_CAR_PHOTOS,
+  FIND_CAR_PHOTOS,
+  FIND_CAR_PHOTO,
+  DELETE_CAR_PHOTO,
+}
+
+export enum FileServiceEvents {
+  DELETE_CAR_PHOTOS,
+}

@@ -26,6 +26,9 @@ export class CarsService {
       where: {
         id,
       },
+      include: {
+        photos: true,
+      },
     });
   }
 

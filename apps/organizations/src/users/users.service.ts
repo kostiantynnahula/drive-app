@@ -37,7 +37,7 @@ export class UsersService {
    * @returns {Promise<User>}
    */
   async findOne(userId: string, organizationId: string): Promise<User> {
-    const message = this.authServiceClient.send(
+    const message = await this.authServiceClient.send(
       AuthServiceEvents.FIND_USER_BY_ORGANIZATION,
       { userId, organizationId },
     );

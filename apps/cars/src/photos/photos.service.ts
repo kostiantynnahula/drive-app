@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { CreatePhotoDto } from './dto/create.dto';
 import { Photo } from '.prisma/client';
+import { CreateManyPhotos } from './intrefaces/photo.interface';
 
 @Injectable()
 export class PhotosService {
@@ -16,25 +16,28 @@ export class PhotosService {
     });
   }
 
-  async findMany(carId: string): Promise<Photo[]> {
+  async findMany(carId: string, ids?: string[]): Promise<Photo[]> {
     return await this.prismaService.photo.findMany({
       where: {
         carId,
+        id: {
+          in: ids,
+        },
       },
     });
   }
 
-  async createOne(data: CreatePhotoDto): Promise<Photo> {
-    return await this.prismaService.photo.create({
+  async createMany(data: CreateManyPhotos[]): Promise<void> {
+    await this.prismaService.photo.createMany({
       data,
     });
   }
 
-  async deleteOne(carId: string, id: string): Promise<Photo> {
-    return await this.prismaService.photo.delete({
+  async deleteMany(carId: string, photoId: string): Promise<void> {
+    await this.prismaService.photo.deleteMany({
       where: {
-        id,
         carId,
+        id: photoId,
       },
     });
   }
