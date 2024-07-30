@@ -39,6 +39,14 @@ export class S3Service {
     return getS3PublicUrl(bucket, key, region);
   }
 
+  async uploadMultiple(
+    files: { fileName: string; file: Buffer }[],
+  ): Promise<string[]> {
+    return Promise.all(
+      files.map(async ({ fileName, file }) => this.upload(fileName, file)),
+    );
+  }
+
   async delete(key: string): Promise<void> {
     const bucket = this.configService.get('AWS_S3_BUCKET_NAME');
 

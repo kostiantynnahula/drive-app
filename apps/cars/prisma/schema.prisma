@@ -19,6 +19,18 @@ model Car {
 
   ownerId        String?
   organizationId String?
+  photos         Photo[]
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+}
+
+model Photo {
+  id    String @id @default(cuid())
+  url   String
+  carId String
+  car   Car    @relation(fields: [carId], references: [id])
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt

@@ -28,6 +28,7 @@ import * as Joi from 'joi';
         AWS_S3_BUCKET_NAME: Joi.string().required(),
         AWS_S3_ORGANIZATION_FOLDER: Joi.string().required(),
         AWS_S3_USER_FOLDER: Joi.string().required(),
+        AWS_S3_CARS_FOLDER: Joi.string().required(),
       }),
     }),
     CarsModule,

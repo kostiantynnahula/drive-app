@@ -3,6 +3,7 @@ import { CarsModule } from './cars/cars.module';
 import { ConfigModule } from '@nestjs/config';
 import { PrismaModule } from './prisma/prisma.module';
 import { UsersModule } from './users/users.module';
+import { PhotosModule } from './photos/photos.module';
 import * as Joi from 'joi';
 
 @Module({
@@ -20,6 +21,7 @@ import * as Joi from 'joi';
     CarsModule,
     PrismaModule,
     UsersModule,
+    PhotosModule,
   ],
   controllers: [],
   providers: [],
