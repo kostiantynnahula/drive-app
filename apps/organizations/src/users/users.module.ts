@@ -6,6 +6,7 @@ import { UsersService } from './users.service';
 import { UsersController } from './users.controller';
 import { OrganizationsService } from './../organizations/organizations.service';
 import { PrismaModule } from '../prisma/prisma.module';
+import { LocationsService } from '../locations/locations.service';
 
 @Module({
   imports: [
@@ -25,6 +26,6 @@ import { PrismaModule } from '../prisma/prisma.module';
     ]),
   ],
   controllers: [UsersController],
-  providers: [UsersService, OrganizationsService],
+  providers: [UsersService, OrganizationsService, LocationsService],
 })
 export class UsersModule {}

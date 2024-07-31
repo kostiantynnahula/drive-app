@@ -5,19 +5,28 @@ import {
   Delete,
   Post,
   NotFoundException,
+  Body,
+  Query,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { OrganizationsService } from '../organizations/organizations.service';
+import { AddUserDto } from './dto/add-user.dto';
+import { LocationsService } from '../locations/locations.service';
+import { UsersQuery } from './dto/users.query';
 
 @Controller('organization')
 export class UsersController {
   constructor(
     private readonly service: UsersService,
     private readonly organizationsService: OrganizationsService,
+    private readonly locationsService: LocationsService,
   ) {}
 
   @Get(':organizationId/users')
-  async findAll(@Param('organizationId') organizationId: string) {
+  async findAll(
+    @Param('organizationId') organizationId: string,
+    @Query() query: UsersQuery,
+  ) {
     const organization =
       await this.organizationsService.findOne(organizationId);
 
@@ -25,7 +34,7 @@ export class UsersController {
       throw new NotFoundException('Organization not found');
     }
 
-    return await this.service.findAll(organizationId);
+    return await this.service.findAll(organizationId, query);
   }
 
   @Get(':organizationId/users/:userId')
@@ -43,11 +52,13 @@ export class UsersController {
     return await this.service.findOne(userId, organizationId);
   }
 
-  @Post(':organizationId/users/:userId')
+  @Post(':organizationId/user')
   async addUserToOrganization(
     @Param('organizationId') organizationId: string,
-    @Param('userId') userId: string,
+    @Body() body: AddUserDto,
   ) {
+    const { userId, locationId } = body;
+
     const organization =
       await this.organizationsService.findOne(organizationId);
 
@@ -55,7 +66,20 @@ export class UsersController {
       throw new NotFoundException('Organization not found');
     }
 
-    return await this.service.addUserToOrganization(userId, organization);
+    const location = await this.locationsService.findOne(
+      organization.id,
+      locationId,
+    );
+
+    if (!location) {
+      throw new NotFoundException('Location not found');
+    }
+
+    return await this.service.addUserToOrganization(
+      userId,
+      locationId,
+      organization,
+    );
   }
 
   @Delete(':organizationId/users/:userId')

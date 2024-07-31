@@ -7,6 +7,7 @@ import {
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
+import { UsersQuery } from './dto/users.query';
 
 @Injectable()
 export class UsersService {
@@ -21,10 +22,17 @@ export class UsersService {
    * @param {string} organizationId
    * @returns {Promise<User[]>}
    */
-  async findAll(organizationId: string): Promise<User> {
+  async findAll(
+    organizationId: string,
+    { locationId, role }: UsersQuery,
+  ): Promise<User> {
     const message = await this.authServiceClient.send(
       AuthServiceEvents.FIND_USERS_BY_ORGANIZATION,
-      { organizationId },
+      {
+        organizationId,
+        locationId,
+        role,
+      },
     );
 
     return await firstValueFrom(message);
@@ -54,6 +62,7 @@ export class UsersService {
    */
   async addUserToOrganization(
     userId: string,
+    locationId: string,
     {
       id: organizationId,
       email: organizationEmail,
@@ -62,7 +71,13 @@ export class UsersService {
   ): Promise<User> {
     const message = await this.authServiceClient.send(
       AuthServiceEvents.ADD_USER_TO_ORGANIZATION,
-      { userId, organizationId, organizationEmail, organizationName },
+      {
+        userId,
+        locationId,
+        organizationId,
+        organizationEmail,
+        organizationName,
+      },
     );
 
     return await firstValueFrom(message);

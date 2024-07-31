@@ -1,14 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { User } from '.prisma/client';
+import { OrganizationDto } from './dto/organization.dto';
 
 @Injectable()
 export class OrganizationService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findMany(organizationId: string): Promise<User[]> {
+  async findMany({
+    organizationId,
+    locationId,
+    role,
+  }: OrganizationDto): Promise<User[]> {
     return await this.prisma.user.findMany({
-      where: { organizationId },
+      where: { organizationId, locationId, role },
     });
   }
 
@@ -18,10 +23,14 @@ export class OrganizationService {
     });
   }
 
-  async addToOrganization(id: string, organizationId: string): Promise<User> {
+  async addToOrganization(
+    id: string,
+    locationId: string,
+    organizationId: string,
+  ): Promise<User> {
     return await this.prisma.user.update({
       where: { id },
-      data: { organizationId },
+      data: { organizationId, locationId },
     });
   }
 

@@ -11,5 +11,8 @@ export class OrganizationUserAssignDto {
   organizationName: string;
 
   @IsDefined()
+  locationId: string;
+
+  @IsDefined()
   userId: string;
 }

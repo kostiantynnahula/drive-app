@@ -21,8 +21,8 @@ export class OrganizationController {
 
   @UsePipes(new ValidationPipe())
   @MessagePattern(AuthServiceEvents.FIND_USERS_BY_ORGANIZATION)
-  async findMany({ organizationId }: OrganizationDto) {
-    return await this.service.findMany(organizationId);
+  async findMany(payload: OrganizationDto) {
+    return await this.service.findMany(payload);
   }
 
   @UsePipes(new ValidationPipe())
@@ -35,6 +35,7 @@ export class OrganizationController {
   @MessagePattern(AuthServiceEvents.ADD_USER_TO_ORGANIZATION)
   async addToOrganization({
     userId,
+    locationId,
     organizationId,
     organizationEmail,
     organizationName,
@@ -45,7 +46,11 @@ export class OrganizationController {
       throw new BadRequestException('User not found');
     }
 
-    const result = await this.service.addToOrganization(userId, organizationId);
+    const result = await this.service.addToOrganization(
+      userId,
+      locationId,
+      organizationId,
+    );
 
     await this.notificationsService.addToOrganization(
       organizationEmail,
