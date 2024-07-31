@@ -35,7 +35,6 @@ export class PhotosController {
   @UsePipes(new ValidationPipe())
   @MessagePattern(CarServiceEvents.ADD_CAR_PHOTOS)
   async addPhotos({ carId, urls }: CreatePhotoDto) {
-    console.log('add photo received', carId, urls);
     const car = await this.carsService.findOne(carId);
 
     if (!car) {

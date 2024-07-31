@@ -1,39 +1,35 @@
-import {
-  BadRequestException,
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Patch,
-  Post,
-  Query,
-} from '@nestjs/common';
+import { BadRequestException, Controller } from '@nestjs/common';
 import { CarsService } from './cars.service';
-import { PaginationQuery } from '@app/common';
 import { CreateCarDto } from './dto/create.dto';
 import { UpdateCarDto } from './dto/update.dto';
 import { UsersService } from '../users/users.service';
+import { MessagePattern } from '@nestjs/microservices';
+import { CarServiceEvents } from '@app/common';
+import { OrganizationDto } from './dto/organization.dto';
+import { OrganizationCarDto } from './dto/organization-car.dto';
+import { OrganizationCarsService } from './organization-cars.service';
 
 @Controller('cars')
 export class CarsController {
   constructor(
     private readonly carsService: CarsService,
+    private readonly organizationCarsServuce: OrganizationCarsService,
     private readonly usersService: UsersService,
   ) {}
 
-  @Get()
-  async getMany(@Query() query: PaginationQuery) {
-    return await this.carsService.findMany(query);
+  @MessagePattern(CarServiceEvents.FIND_ORGANIZATION_CARS)
+  async getMany({ organizationId }: OrganizationDto) {
+    return await this.organizationCarsServuce.findMany(organizationId);
   }
 
-  @Get(':id')
-  async getOne(@Param('id') id: string) {
-    return await this.carsService.findOne(id);
+  @MessagePattern(CarServiceEvents.FIND_ORGANIZATION_CAR)
+  async getOne({ organizationId, carId }: OrganizationCarDto) {
+    console.log('get one car');
+    return await this.organizationCarsServuce.findOne(carId, organizationId);
   }
 
-  @Post()
-  async createOne(@Body() body: CreateCarDto) {
+  @MessagePattern(CarServiceEvents.ADD_ORGANIZATION_CAR)
+  async createOne(body: CreateCarDto) {
     const { ownerId, organizationId } = body;
 
     const user = await this.usersService.findOneByOrganization(
@@ -48,24 +44,19 @@ export class CarsController {
     return await this.carsService.createOne(body);
   }
 
-  @Patch(':id')
-  async updateOne(@Param('id') id: string, @Body() body: UpdateCarDto) {
-    const { ownerId, organizationId } = body;
+  @MessagePattern(CarServiceEvents.UPDATE_ORGANIZATION_CAR)
+  async updateOne(body: UpdateCarDto) {
+    const { carId, organizationId } = body;
 
-    const user = await this.usersService.findOneByOrganization(
-      ownerId,
+    return await this.organizationCarsServuce.updateOne(
+      carId,
       organizationId,
+      body,
     );
-
-    if (!user) {
-      throw new BadRequestException('User not found');
-    }
-
-    return await this.carsService.updateOne(id, body);
   }
 
-  @Delete(':id')
-  async deleteOne(@Param('id') id: string) {
-    return await this.carsService.deleteOne(id);
+  @MessagePattern(CarServiceEvents.DELETE_ORGANIZATION_CAR)
+  async deleteOne({ carId, organizationId }: OrganizationCarDto) {
+    return await this.organizationCarsServuce.deleteOne(carId, organizationId);
   }
 }
