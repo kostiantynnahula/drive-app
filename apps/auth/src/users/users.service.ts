@@ -46,28 +46,6 @@ export class UsersService {
     return result;
   }
 
-  async findAllByOrganizationId(
-    organizationId: string,
-    take = 10,
-    skip = 0,
-  ): Promise<User[]> {
-    return await this.prismaService.user.findMany({
-      where: { organizationId },
-      orderBy: { id: 'desc' },
-      take,
-      skip,
-    });
-  }
-
-  async findOneByOrganizationId(
-    organizationId: string,
-    userId: string,
-  ): Promise<User> {
-    return await this.prismaService.user.findFirst({
-      where: { organizationId, id: userId },
-    });
-  }
-
   async findOne(id: string): Promise<User> {
     return await this.prismaService.user.findFirst({ where: { id } });
   }

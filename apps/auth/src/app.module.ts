@@ -4,6 +4,7 @@ import { UsersModule } from './users/users.module';
 import * as Joi from 'joi';
 import { ConfigModule } from '@nestjs/config';
 import { NotificationsModule } from './notifications/notifications.module';
+import { OrganizationModule } from './organization/organization.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { NotificationsModule } from './notifications/notifications.module';
     AuthModule,
     UsersModule,
     NotificationsModule,
+    OrganizationModule,
   ],
   controllers: [],
   providers: [],

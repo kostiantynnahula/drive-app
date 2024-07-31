@@ -54,11 +54,15 @@ export class UsersService {
    */
   async addUserToOrganization(
     userId: string,
-    organization: Organization,
+    {
+      id: organizationId,
+      email: organizationEmail,
+      name: organizationName,
+    }: Organization,
   ): Promise<User> {
     const message = await this.authServiceClient.send(
       AuthServiceEvents.ADD_USER_TO_ORGANIZATION,
-      { userId, organization },
+      { userId, organizationId, organizationEmail, organizationName },
     );
 
     return await firstValueFrom(message);
