@@ -8,6 +8,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
 import { UsersQuery } from './dto/users.query';
+import { CreateUserDto } from './dto/create-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -16,22 +17,32 @@ export class UsersService {
     private readonly authServiceClient: ClientProxy,
   ) {}
 
+  async createOne(organizationId: string, payload: CreateUserDto) {
+    try {
+      const message = await this.authServiceClient.send(
+        AuthServiceEvents.CREATE_USER_TO_ORGANIZATION,
+        { organizationId, ...payload },
+      );
+
+      return await firstValueFrom(message);
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+
   /**
    * Find all users related to organization
    *
    * @param {string} organizationId
    * @returns {Promise<User[]>}
    */
-  async findAll(
-    organizationId: string,
-    { locationId, role }: UsersQuery,
-  ): Promise<User> {
+  async findAll(organizationId: string, query: UsersQuery): Promise<User[]> {
     const message = await this.authServiceClient.send(
       AuthServiceEvents.FIND_USERS_BY_ORGANIZATION,
       {
         organizationId,
-        locationId,
-        role,
+        ...query,
       },
     );
 

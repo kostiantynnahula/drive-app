@@ -1,4 +1,5 @@
-import { IsDefined, IsOptional } from 'class-validator';
+import { IsDefined } from 'class-validator';
+import { $Enums } from '.prisma/client';
 
 export class CreateCarDto {
   @IsDefined()
@@ -14,11 +15,17 @@ export class CreateCarDto {
   vin: string;
 
   @IsDefined()
+  transmission: $Enums.TransmissionType;
+
+  @IsDefined()
   color: string;
 
   @IsDefined()
   ownerId: string;
 
-  @IsOptional()
+  @IsDefined()
   organizationId: string;
+
+  @IsDefined()
+  locationId: string;
 }

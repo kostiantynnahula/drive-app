@@ -4,6 +4,7 @@ import { CARS_SERVICE, CarServiceEvents, Car } from '@app/common';
 import { firstValueFrom } from 'rxjs';
 import { CreateCarDto } from './dto/create-car.dto';
 import { UpdateCarDto } from './dto/update-car.dto';
+import { GetManyDto } from './dto/get-many.dto';
 
 @Injectable()
 export class CarService {
@@ -17,10 +18,10 @@ export class CarService {
    *
    * @returns {Promise<Car[]>}
    */
-  async findAll(organizationId: string): Promise<Car[]> {
+  async findAll(payload: GetManyDto): Promise<Car[]> {
     const message = await this.carsServiceClient.send(
       CarServiceEvents.FIND_ORGANIZATION_CARS,
-      { organizationId },
+      payload,
     );
 
     return await firstValueFrom(message);
@@ -30,6 +31,19 @@ export class CarService {
     const message = await this.carsServiceClient.send(
       CarServiceEvents.FIND_ORGANIZATION_CAR,
       { organizationId, carId },
+    );
+
+    return await firstValueFrom(message);
+  }
+
+  async findOneByOwner(
+    organizationId: string,
+    ownerId: string,
+  ): Promise<Car[]> {
+    console.log('send by owner', { organizationId, ownerId });
+    const message = await this.carsServiceClient.send(
+      CarServiceEvents.FIND_ORGANIZATION_CAR_BY_OWNER,
+      { organizationId, ownerId },
     );
 
     return await firstValueFrom(message);

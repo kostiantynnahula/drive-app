@@ -3,14 +3,10 @@ import { UsersService } from './users.service';
 import { MessagePattern } from '@nestjs/microservices';
 import { AuthServiceEvents } from '@app/common';
 import { UpdateLogoDto } from './dto/update-logo.dto';
-import { NotificationsService } from '../notifications/notifications.service';
 
 @Controller()
 export class UsersTcpController {
-  constructor(
-    private readonly service: UsersService,
-    private readonly notificationsService: NotificationsService,
-  ) {}
+  constructor(private readonly service: UsersService) {}
 
   @MessagePattern(AuthServiceEvents.UPDATE_USER_LOGO)
   async updateUserLogo({ userId, logo }: UpdateLogoDto) {

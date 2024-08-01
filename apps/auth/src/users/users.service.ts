@@ -75,4 +75,12 @@ export class UsersService {
   async findByEmail(email: string): Promise<User> {
     return await this.prismaService.user.findUnique({ where: { email } });
   }
+
+  async findByEmailOrPhone(email: string, phone: string): Promise<User> {
+    return await this.prismaService.user.findFirst({
+      where: {
+        OR: [{ email }, { phone }],
+      },
+    });
+  }
 }

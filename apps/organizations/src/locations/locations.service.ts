@@ -13,13 +13,16 @@ export class LocationsService {
     organizationId: string,
     query: SearchQuery,
   ): Promise<Location[]> {
-    const { skip = 0, take = 10, country, city } = query;
+    const { skip = 0, take = 10, country, city, ids } = query;
     return await this.prismaService.location.findMany({
       where: {
         organizationId,
         country,
         city,
         deletedAt: null,
+        id: {
+          in: ids,
+        },
       },
       take: take,
       skip: skip,

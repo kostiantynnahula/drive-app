@@ -15,8 +15,14 @@ export class CreateCarDto {
   vin: string;
 
   @IsDefined()
+  transmission: string;
+
+  @IsDefined()
   color: string;
 
   @IsDefined()
   ownerId: string;
+
+  @IsDefined()
+  locationId: string;
 }

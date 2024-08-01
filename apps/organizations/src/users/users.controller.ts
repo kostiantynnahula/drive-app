@@ -13,17 +13,35 @@ import { OrganizationsService } from '../organizations/organizations.service';
 import { AddUserDto } from './dto/add-user.dto';
 import { LocationsService } from '../locations/locations.service';
 import { UsersQuery } from './dto/users.query';
+import { CreateUserDto } from './dto/create-user.dto';
+import { CarService } from '../car/car.service';
 
 @Controller('organization')
 export class UsersController {
   constructor(
     private readonly service: UsersService,
-    private readonly organizationsService: OrganizationsService,
     private readonly locationsService: LocationsService,
+    private readonly carService: CarService,
+    private readonly organizationsService: OrganizationsService,
   ) {}
 
+  @Post(':organizationId/user')
+  async createUser(
+    @Param('organizationId') organizationId: string,
+    @Body() body: CreateUserDto,
+  ) {
+    const organization =
+      await this.organizationsService.findOne(organizationId);
+
+    if (!organization) {
+      throw new NotFoundException('Organization not found');
+    }
+
+    return await this.service.createOne(organizationId, body);
+  }
+
   @Get(':organizationId/users')
-  async findAll(
+  async findMany(
     @Param('organizationId') organizationId: string,
     @Query() query: UsersQuery,
   ) {
@@ -34,7 +52,39 @@ export class UsersController {
       throw new NotFoundException('Organization not found');
     }
 
-    return await this.service.findAll(organizationId, query);
+    const users = await this.service.findAll(organizationId, query);
+
+    const userLocationsIds = users.map((user) => user.locationId);
+
+    const locations = await this.locationsService.findMany(organizationId, {
+      ids: userLocationsIds,
+    });
+
+    const cars = await this.carService.findAll({
+      organizationId,
+      locationId: query.locationId,
+      transmission: query.transmission,
+    });
+
+    const result = users.map((user) => {
+      const location = locations.find(
+        (location) => location.id === user.locationId,
+      );
+
+      const car = cars.find((car) => car.ownerId === user.id);
+
+      return {
+        ...user,
+        car,
+        location,
+      };
+    });
+
+    if (query.transmission) {
+      return result.filter((user) => user.car);
+    }
+
+    return result;
   }
 
   @Get(':organizationId/users/:userId')
@@ -49,10 +99,23 @@ export class UsersController {
       throw new NotFoundException('Organization not found');
     }
 
-    return await this.service.findOne(userId, organizationId);
+    const car = await this.carService.findOneByOwner(organizationId, userId);
+
+    const user = await this.service.findOne(userId, organizationId);
+
+    const location = await this.locationsService.findOne(
+      organizationId,
+      user.locationId,
+    );
+
+    return {
+      ...user,
+      location,
+      car,
+    };
   }
 
-  @Post(':organizationId/user')
+  @Post(':organizationId/user/add')
   async addUserToOrganization(
     @Param('organizationId') organizationId: string,
     @Body() body: AddUserDto,

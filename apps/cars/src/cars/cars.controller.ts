@@ -5,26 +5,35 @@ import { UpdateCarDto } from './dto/update.dto';
 import { UsersService } from '../users/users.service';
 import { MessagePattern } from '@nestjs/microservices';
 import { CarServiceEvents } from '@app/common';
-import { OrganizationDto } from './dto/organization.dto';
+import { OrganizationCarsDto } from './dto/organization-cars.dto';
 import { OrganizationCarDto } from './dto/organization-car.dto';
 import { OrganizationCarsService } from './organization-cars.service';
+import { OrganizationOwnerCar } from './dto/organization-owner-car.dto';
 
 @Controller('cars')
 export class CarsController {
   constructor(
     private readonly carsService: CarsService,
-    private readonly organizationCarsServuce: OrganizationCarsService,
     private readonly usersService: UsersService,
+    private readonly organizationCarsServuce: OrganizationCarsService,
   ) {}
 
   @MessagePattern(CarServiceEvents.FIND_ORGANIZATION_CARS)
-  async getMany({ organizationId }: OrganizationDto) {
-    return await this.organizationCarsServuce.findMany(organizationId);
+  async getMany(payload: OrganizationCarsDto) {
+    return await this.organizationCarsServuce.findMany(payload);
+  }
+
+  @MessagePattern(CarServiceEvents.FIND_ORGANIZATION_CAR_BY_OWNER)
+  async findOneByOwner({ ownerId, organizationId }: OrganizationOwnerCar) {
+    console.log('find one by owner');
+    return await this.organizationCarsServuce.findOneByOwner(
+      organizationId,
+      ownerId,
+    );
   }
 
   @MessagePattern(CarServiceEvents.FIND_ORGANIZATION_CAR)
   async getOne({ organizationId, carId }: OrganizationCarDto) {
-    console.log('get one car');
     return await this.organizationCarsServuce.findOne(carId, organizationId);
   }
 

@@ -8,5 +8,5 @@ export class UsersQuery {
   role: 'USER' | 'INSTRUCTOR' | 'ADMIN' | 'SUPERADMIN';
 
   @IsOptional()
-  transmisstion: string;
+  transmission: 'MANUAL' | 'AUTOMATIC';
 }

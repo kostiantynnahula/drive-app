@@ -1,6 +1,9 @@
 import { IsDefined } from 'class-validator';
 
-export class OrganizationDto {
+export class OrganizationOwnerCar {
   @IsDefined()
   organizationId: string;
+
+  @IsDefined()
+  ownerId: string;
 }

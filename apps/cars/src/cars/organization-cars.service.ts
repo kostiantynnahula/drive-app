@@ -3,15 +3,26 @@ import { PrismaService } from '../prisma/prisma.service';
 import { CreateCarDto } from './dto/create.dto';
 import { UpdateCarDto } from './dto/update.dto';
 import { Car } from '.prisma/client';
+import { OrganizationCarsDto } from './dto/organization-cars.dto';
 
 @Injectable()
 export class OrganizationCarsService {
   constructor(private readonly prismaSerice: PrismaService) {}
 
-  async findMany(organizationId: string): Promise<Car[]> {
+  async findMany({
+    organizationId,
+    locationId,
+    transmission,
+    owners,
+  }: OrganizationCarsDto): Promise<Car[]> {
     return this.prismaSerice.car.findMany({
       where: {
         organizationId,
+        locationId,
+        transmission,
+        ownerId: {
+          in: owners,
+        },
         deletedAt: null,
       },
       orderBy: {
@@ -29,6 +40,16 @@ export class OrganizationCarsService {
       },
       include: {
         photos: true,
+      },
+    });
+  }
+
+  async findOneByOwner(organizationId: string, ownerId: string): Promise<Car> {
+    return await this.prismaSerice.car.findFirst({
+      where: {
+        organizationId,
+        ownerId,
+        deletedAt: null,
       },
     });
   }

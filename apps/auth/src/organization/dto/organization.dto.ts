@@ -1,4 +1,4 @@
-import { IsDefined, IsOptional } from 'class-validator';
+import { IsDefined, IsEnum, IsOptional } from 'class-validator';
 import { $Enums } from '.prisma/client';
 
 export class OrganizationDto {
@@ -10,4 +10,8 @@ export class OrganizationDto {
 
   @IsOptional()
   role: $Enums.Role;
+
+  @IsOptional()
+  @IsEnum(['MANUAL', 'AUTOMATIC'])
+  transmission: 'MANUAL' | 'AUTOMATIC';
 }

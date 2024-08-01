@@ -26,4 +26,7 @@ export class SearchQuery {
   @IsOptional()
   @IsString()
   city?: string;
+
+  @IsOptional()
+  ids?: string[];
 }

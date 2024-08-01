@@ -9,19 +9,20 @@ export interface User {
   role: Role;
   logo: string;
   organizationId: string;
+  locationId: string;
   createdAt: Date;
   updatedAt: Date;
   deletedAt: Date;
 }
 
-enum Gender {
-  MALE,
-  FEMALE,
+export enum Gender {
+  MALE = 'MALE',
+  FEMALE = 'FEMALE',
 }
 
-enum Role {
-  USER,
-  INSTRUCTOR,
-  ADMIN,
-  SUPERADMIN,
+export enum Role {
+  USER = 'USER',
+  INSTRUCTOR = 'INSTRUCTOR',
+  ADMIN = 'ADMIN',
+  SUPERADMIN = 'SUPERADMIN',
 }

@@ -11,13 +11,30 @@ import { OrganizationDto } from './dto/organization.dto';
 import { OrganizationUserDto } from './dto/organization-user.dto';
 import { OrganizationUserAssignDto } from './dto/organization-user-assign.dto';
 import { NotificationsService } from '../notifications/notifications.service';
+import { UsersService } from '../users/users.service';
+import { OrganizationCreateUserDto } from './dto/organization-create-user.dto';
 
 @Controller()
 export class OrganizationController {
   constructor(
     private readonly service: OrganizationService,
+    private readonly userService: UsersService,
     private readonly notificationsService: NotificationsService,
   ) {}
+
+  @UsePipes(new ValidationPipe())
+  @MessagePattern(AuthServiceEvents.CREATE_USER_TO_ORGANIZATION)
+  async creatOne(payload: OrganizationCreateUserDto) {
+    const { email, phone } = payload;
+
+    const user = await this.userService.findByEmailOrPhone(email, phone);
+
+    if (user) {
+      throw new BadRequestException('User exists');
+    }
+
+    return await this.userService.create(payload);
+  }
 
   @UsePipes(new ValidationPipe())
   @MessagePattern(AuthServiceEvents.FIND_USERS_BY_ORGANIZATION)

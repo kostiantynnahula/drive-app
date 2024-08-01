@@ -6,7 +6,8 @@ import { OrganizationsModule } from '../organizations/organizations.module';
 
 @Module({
   imports: [PrismaModule, OrganizationsModule],
-  providers: [LocationsService],
   controllers: [LocationsController],
+  providers: [LocationsService],
+  exports: [LocationsService],
 })
 export class LocationsModule {}
