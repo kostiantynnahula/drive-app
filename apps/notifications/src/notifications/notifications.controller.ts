@@ -12,15 +12,15 @@ export class NotificationsController {
 
   @UsePipes(new ValidationPipe())
   @EventPattern(NotificationsServiceEvents.FORGOT_PASSWORD)
-  async sendNotification({ email, token }: ResetPasswordDto) {
-    await this.notificationsService.resetPasswordEmail(email, token);
+  async forgotPassword({ email, token }: ResetPasswordDto) {
+    await this.notificationsService.forgotPasswordEmail(email, token);
     return {
       message: 'Notification sent successfully',
     };
   }
 
   @EventPattern(NotificationsServiceEvents.SUCCESSFUL_REGISTRATION)
-  async successRegistrationNotification({ email }: EmailDto) {
+  async successRegistration({ email }: EmailDto) {
     await this.notificationsService.successRegistrationEmail(email);
     return {
       message: 'Notification sent successfully',
@@ -28,7 +28,7 @@ export class NotificationsController {
   }
 
   @EventPattern(NotificationsServiceEvents.SUCCESSFUL_PASSWORD_CHANGED)
-  async successResetPasswordNotification({ email }: EmailDto) {
+  async successResetPassword({ email }: EmailDto) {
     await this.notificationsService.successResetPasswordEmail(email);
     return {
       message: 'Notification sent successfully',
@@ -36,16 +36,16 @@ export class NotificationsController {
   }
 
   @EventPattern(NotificationsServiceEvents.USER_ADDED_TO_ORGANIZATION)
-  async userAddedToOrganizationNotification(data: OrganizationDto) {
-    await this.notificationsService.userAddedToOrganizationNotification(data);
+  async userAddedToOrganization(data: OrganizationDto) {
+    await this.notificationsService.userAddedToOrganization(data);
     return {
       message: 'Notification sent successfully',
     };
   }
 
   @EventPattern(NotificationsServiceEvents.USER_REMOVED_FROM_ORGANIZATION)
-  async userRemovedFromOrganizationNotification(data: OrganizationDto) {
-    await this.notificationsService.userAddedToOrganizationNotification(data);
+  async userRemovedFromOrganization(data: OrganizationDto) {
+    await this.notificationsService.userAddedToOrganization(data);
     return {
       message: 'Notification sent successfully',
     };

@@ -24,7 +24,7 @@ export class CarController {
   ) {}
 
   @Post()
-  async createCar(@CurrentUser() user: User, @Body() body: CreateCarDto) {
+  async createOne(@CurrentUser() user: User, @Body() body: CreateCarDto) {
     const { locationId, ownerId } = body;
 
     const location = await this.locationService.findOne(
@@ -56,30 +56,30 @@ export class CarController {
       throw new BadRequestException('User already has a car');
     }
 
-    return await this.service.create(user.organizationId, body);
+    return await this.service.createOne(user.organizationId, body);
   }
 
   @Get()
-  async findCars(@CurrentUser() user: User) {
-    return await this.service.findAll({ organizationId: user.organizationId });
+  async findMany(@CurrentUser() user: User) {
+    return await this.service.findMany({ organizationId: user.organizationId });
   }
 
   @Get(':carId')
-  async findCar(@CurrentUser() user: User, @Param('carId') carId: string) {
+  async findOne(@CurrentUser() user: User, @Param('carId') carId: string) {
     return await this.service.findOne(user.organizationId, carId);
   }
 
   @Patch(':carId')
-  async updateCar(
+  async updateOne(
     @Param('carId') carId: string,
     @Body() body: UpdateCarDto,
     @CurrentUser() user: User,
   ) {
-    return await this.service.update(user.organizationId, carId, body);
+    return await this.service.updateOne(user.organizationId, carId, body);
   }
 
   @Delete(':carId')
-  async deleteCar(@CurrentUser() user: User, @Param('carId') carId: string) {
-    return await this.service.delete(user.organizationId, carId);
+  async deleteOne(@CurrentUser() user: User, @Param('carId') carId: string) {
+    return await this.service.deleteOne(user.organizationId, carId);
   }
 }

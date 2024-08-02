@@ -29,7 +29,7 @@ export class UsersController {
   ) {}
 
   @Post()
-  async createUser(@CurrentUser() user: User, @Body() body: CreateUserDto) {
+  async createOne(@CurrentUser() user: User, @Body() body: CreateUserDto) {
     const organization = await this.organizationsService.findOne(
       user.organizationId,
     );
@@ -51,7 +51,7 @@ export class UsersController {
       throw new NotFoundException('Organization not found');
     }
 
-    const users = await this.service.findAll(user.organizationId, query);
+    const users = await this.service.findMany(user.organizationId, query);
 
     const ids = users.map((user) => user.locationId);
 
@@ -60,7 +60,7 @@ export class UsersController {
       { ids },
     );
 
-    const cars = await this.carService.findAll({
+    const cars = await this.carService.findMany({
       organizationId: user.organizationId,
       locationId: query.locationId,
       transmission: query.transmission,
@@ -87,7 +87,7 @@ export class UsersController {
     return result;
   }
 
-  @Get('users/:userId')
+  @Get(':userId')
   async findOne(@CurrentUser() user: User, @Param('userId') userId: string) {
     const organization = await this.organizationsService.findOne(
       user.organizationId,
@@ -114,11 +114,8 @@ export class UsersController {
     };
   }
 
-  @Post('user/add')
-  async addUserToOrganization(
-    @CurrentUser() user: User,
-    @Body() body: AddUserDto,
-  ) {
+  @Post('add')
+  async addOne(@CurrentUser() user: User, @Body() body: AddUserDto) {
     const { userId, locationId } = body;
 
     const organization = await this.organizationsService.findOne(
@@ -145,11 +142,8 @@ export class UsersController {
     );
   }
 
-  @Delete('users/:userId')
-  async removeUserFromOrganization(
-    @CurrentUser() user: User,
-    @Param('userId') userId: string,
-  ) {
+  @Delete(':userId')
+  async deleteOne(@CurrentUser() user: User, @Param('userId') userId: string) {
     const organization = await this.organizationsService.findOne(
       user.organizationId,
     );

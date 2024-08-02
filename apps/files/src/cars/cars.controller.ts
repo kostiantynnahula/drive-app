@@ -43,10 +43,7 @@ export class CarsController {
   }
 
   @Delete(':id/photo/:photoId')
-  async deletePicture(
-    @Param('id') id: string,
-    @Param('photoId') photoId: string,
-  ) {
+  async deleteOne(@Param('id') id: string, @Param('photoId') photoId: string) {
     const photo = await this.service.findCarPhoto(id, photoId);
 
     if (photo) {

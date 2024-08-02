@@ -7,6 +7,12 @@ import { CreateManyPhotos } from './intrefaces/photo.interface';
 export class PhotosService {
   constructor(private readonly prismaService: PrismaService) {}
 
+  /**
+   * Find one photo
+   * @param {string} carId
+   * @param {string} id
+   * @returns {Promise<Photo>}
+   */
   async findOne(carId: string, id: string): Promise<Photo> {
     return await this.prismaService.photo.findUnique({
       where: {
@@ -16,6 +22,12 @@ export class PhotosService {
     });
   }
 
+  /**
+   * Find many photos
+   * @param {string} carId
+   * @param {string[]} ids
+   * @returns {Promise<Photo[]>}
+   */
   async findMany(carId: string, ids?: string[]): Promise<Photo[]> {
     return await this.prismaService.photo.findMany({
       where: {
@@ -27,12 +39,23 @@ export class PhotosService {
     });
   }
 
+  /**
+   * Create many photos
+   * @param {CreateManyPhotos[]} data
+   * @returns {Promise<void>}
+   */
   async createMany(data: CreateManyPhotos[]): Promise<void> {
     await this.prismaService.photo.createMany({
       data,
     });
   }
 
+  /**
+   * Delete one photo
+   * @param {string} carId
+   * @param {string} id
+   * @returns {Promise<void>}
+   */
   async deleteMany(carId: string, photoId: string): Promise<void> {
     await this.prismaService.photo.deleteMany({
       where: {

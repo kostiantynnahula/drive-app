@@ -8,6 +8,13 @@ import {
 @Injectable()
 export class FileValidationPipe {
   constructor(public readonly options: FileValidationOptions) {}
+
+  /**
+   * Validate uploaded files
+   * @param {File[]} value
+   * @param {ArgumentMetadata} metadata
+   * @returns {Promsie<File[]>}
+   */
   async transform(value: File[], metadata: ArgumentMetadata): Promise<File[]> {
     if (metadata.type === 'custom') {
       const files = value.filter(

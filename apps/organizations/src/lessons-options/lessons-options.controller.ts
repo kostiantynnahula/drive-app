@@ -20,7 +20,7 @@ export class LessonsOptionsController {
 
   @Get()
   async findMany(@CurrentUser() user: User) {
-    return await this.service.findManyByOrganization(user.organizationId);
+    return await this.service.findMany(user.organizationId);
   }
 
   @Get(':optionId')
@@ -28,10 +28,7 @@ export class LessonsOptionsController {
     @CurrentUser() user: User,
     @Param('optionId') optionId: string,
   ) {
-    return await this.service.findOneByOrganization(
-      user.organizationId,
-      optionId,
-    );
+    return await this.service.findOne(user.organizationId, optionId);
   }
 
   @Post()
@@ -48,10 +45,7 @@ export class LessonsOptionsController {
       throw new BadRequestException('Option already exists');
     }
 
-    return await this.service.createOneByOrganization(
-      user.organizationId,
-      body,
-    );
+    return await this.service.createOne(user.organizationId, body);
   }
 
   @Patch(':optionId')
@@ -60,11 +54,7 @@ export class LessonsOptionsController {
     @Param('optionId') optionId: string,
     @Body() body: CreateLessonOptionDto,
   ) {
-    return await this.service.updateOneByOrganization(
-      user.organizationId,
-      optionId,
-      body,
-    );
+    return await this.service.updateOne(user.organizationId, optionId, body);
   }
 
   @Delete(':optionId')
@@ -72,9 +62,6 @@ export class LessonsOptionsController {
     @CurrentUser() user: User,
     @Param('optionId') optionId: string,
   ) {
-    return await this.service.deleteOneByOrganization(
-      user.organizationId,
-      optionId,
-    );
+    return await this.service.deleteOne(user.organizationId, optionId);
   }
 }

@@ -15,6 +15,12 @@ export class OrganizationService extends S3Service {
     super(configService, configService.get('AWS_S3_ORGANIZATION_FOLDER'));
   }
 
+  /**
+   * Update organzation logo
+   *
+   * @param {string} organizationId
+   * @param {string} logo
+   */
   async updateOrganizationLogo(organizationId: string, logo: string) {
     const message = this.organizationServiceClient.send(
       OrganizationServiceEvents.UPDATE_ORGANIZATION_LOGO,
@@ -27,6 +33,10 @@ export class OrganizationService extends S3Service {
     return await firstValueFrom(message);
   }
 
+  /**
+   * Find organization
+   * @param {string} organizationId
+   */
   async findOrganization(organizationId: string) {
     const message = this.organizationServiceClient.send(
       OrganizationServiceEvents.FIND_ORGANIZATION,

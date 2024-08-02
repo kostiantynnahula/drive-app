@@ -9,6 +9,11 @@ import { OrganizationCarsDto } from './dto/organization-cars.dto';
 export class OrganizationCarsService {
   constructor(private readonly prismaSerice: PrismaService) {}
 
+  /**
+   * Find many cars by organization
+   * @param {OrganizationCarsDto} param
+   * @returns {Promise<Car[]>}
+   */
   async findMany({
     organizationId,
     locationId,
@@ -31,6 +36,12 @@ export class OrganizationCarsService {
     });
   }
 
+  /**
+   * Find one car by organization
+   * @param {string} id
+   * @param {string} organizationId
+   * @returns {Promise<Car>}
+   */
   async findOne(id: string, organizationId: string): Promise<Car> {
     return this.prismaSerice.car.findFirst({
       where: {
@@ -44,6 +55,13 @@ export class OrganizationCarsService {
     });
   }
 
+  /**
+   * Find one car by owner
+   *
+   * @param {string} organizationId
+   * @param {string} ownerI
+   * @returns {Promise<Car>}
+   */
   async findOneByOwner(organizationId: string, ownerId: string): Promise<Car> {
     return await this.prismaSerice.car.findFirst({
       where: {
@@ -54,12 +72,25 @@ export class OrganizationCarsService {
     });
   }
 
+  /**
+   * Create one car
+   *
+   * @param {CreateCarDto} data
+   * @returns {Promise<Car>}
+   */
   async createOne(data: CreateCarDto): Promise<Car> {
     return this.prismaSerice.car.create({
       data,
     });
   }
 
+  /**
+   * Update one car
+   * @param {string} id
+   * @param {string} organizationId
+   * @param {UpdateCarDto} data
+   * @returns {Promise<Car>}
+   */
   async updateOne(
     id: string,
     organizationId: string,
@@ -75,7 +106,14 @@ export class OrganizationCarsService {
     });
   }
 
-  async deleteOne(id: string, organizationId): Promise<Car> {
+  /**
+   * Delete one car
+   *
+   * @param {string} id
+   * @param {string} organizationId
+   * @returns {Promise<Car>}
+   */
+  async deleteOne(id: string, organizationId: string): Promise<Car> {
     return this.prismaSerice.car.update({
       where: {
         id,

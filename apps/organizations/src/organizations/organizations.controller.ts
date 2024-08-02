@@ -21,7 +21,7 @@ export class OrganizationsController {
   constructor(private readonly organizationsService: OrganizationsService) {}
 
   @Get()
-  async getOne(@CurrentUser() user: User) {
+  async findOne(@CurrentUser() user: User) {
     if (!user.organizationId) {
       throw new NotFoundException('User does not belong to any organization');
     }

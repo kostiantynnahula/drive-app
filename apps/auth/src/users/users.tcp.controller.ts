@@ -18,7 +18,7 @@ export class UsersTcpController {
       };
     }
 
-    return await this.service.update(userId, { logo });
+    return await this.service.updateOne(userId, { logo });
   }
 
   @MessagePattern(AuthServiceEvents.FIND_USER_BY_ID)

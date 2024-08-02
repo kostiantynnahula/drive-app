@@ -13,12 +13,25 @@ export class UsersService {
     private readonly hashService: HashService,
   ) {}
 
-  async create(data: CreateUserDto): Promise<User> {
+  /**
+   * Create a new user
+   *
+   * @param {CreateUserDto} data
+   * @returns {Promise<User>}
+   */
+  async createOne(data: CreateUserDto): Promise<User> {
     const password = await this.hashService.hash(data.password);
     return this.prismaService.user.create({ data: { ...data, password } });
   }
 
-  async update(id: string, data: Partial<User>): Promise<User> {
+  /**
+   * Update a user
+   *
+   * @param {string} id
+   * @param {Partial<User>} data
+   * @returns {Promise<User>}
+   */
+  async updateOne(id: string, data: Partial<User>): Promise<User> {
     if (data.password) {
       data.password = await this.hashService.hash(data.password);
     }
@@ -31,11 +44,23 @@ export class UsersService {
     return result;
   }
 
-  async remove(id: string): Promise<User> {
+  /**
+   * Delete a user
+   *
+   * @param {string} id
+   * @returns {Promise<User>}
+   */
+  async deleteOne(id: string): Promise<User> {
     return this.prismaService.user.delete({ where: { id } });
   }
 
-  async findAll(query: PaginationQuery): Promise<User[]> {
+  /**
+   * Find all users
+   *
+   * @param {PaginationQuery} query
+   * @returns {Promise<User[]>}
+   */
+  async findMany(query: PaginationQuery): Promise<User[]> {
     const { take = 10, skip = 0 } = query;
 
     const result = await this.prismaService.user.findMany({
@@ -46,10 +71,23 @@ export class UsersService {
     return result;
   }
 
+  /**
+   * Find one user
+   *
+   * @param {string} id
+   * @returns {Promise<User>}
+   */
   async findOne(id: string): Promise<User> {
     return await this.prismaService.user.findFirst({ where: { id } });
   }
 
+  /**
+   * Verify user credentials
+   *
+   * @param {string} email
+   * @param {string} password
+   * @returns {Promise<User>}
+   */
   async verifyUser(email: string, password: string) {
     const user = await this.prismaService.user.findFirstOrThrow({
       where: { email },
@@ -66,16 +104,35 @@ export class UsersService {
     return user;
   }
 
+  /**
+   * Get user by id
+   *
+   * @param {GetUserDto} param
+   * @returns {Promise<User>}
+   */
   async getUser({ id }: GetUserDto) {
     return await this.prismaService.user.findFirstOrThrow({
       where: { id: id },
     });
   }
 
+  /**
+   * Find user by email
+   *
+   * @param {string} email
+   * @returns {Promise<User>}
+   */
   async findByEmail(email: string): Promise<User> {
     return await this.prismaService.user.findUnique({ where: { email } });
   }
 
+  /**
+   * Find user by email or phone
+   *
+   * @param {string} email
+   * @param {string} phone
+   * @returns {Promise<User>}
+   */
   async findByEmailOrPhone(email: string, phone: string): Promise<User> {
     return await this.prismaService.user.findFirst({
       where: {

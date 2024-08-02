@@ -13,6 +13,11 @@ export class NotificationsService {
     private readonly notificationsService: ClientProxy,
   ) {}
 
+  /**
+   * Send forgot password notification
+   * @param {string} email
+   * @param {string} token
+   */
   async forgotPassword(email: string, token: string): Promise<void> {
     await this.notificationsService.emit<NotificationResponse>(
       NotificationsServiceEvents.FORGOT_PASSWORD,
@@ -20,6 +25,10 @@ export class NotificationsService {
     );
   }
 
+  /**
+   * Send reset password notification
+   * @param {string} email
+   */
   async resetPassword(email: string): Promise<void> {
     await this.notificationsService.emit<NotificationResponse>(
       NotificationsServiceEvents.SUCCESSFUL_PASSWORD_CHANGED,
@@ -27,6 +36,10 @@ export class NotificationsService {
     );
   }
 
+  /**
+   * Send registration notification
+   * @param {string} email
+   */
   async registration(email: string): Promise<void> {
     await this.notificationsService.emit<NotificationResponse>(
       NotificationsServiceEvents.SUCCESSFUL_REGISTRATION,
@@ -34,6 +47,12 @@ export class NotificationsService {
     );
   }
 
+  /**
+   * Send user added to organization notification
+   * @param {string} from
+   * @param {string} to
+   * @param {string} organizationName
+   */
   async addToOrganization(
     from: string,
     to: string,
@@ -45,6 +64,12 @@ export class NotificationsService {
     );
   }
 
+  /**
+   * Send user removed from organization notification
+   * @param {string} from
+   * @param {string} to
+   * @param {string} organizationName
+   */
   async removeFromOrganization(
     from: string,
     to: string,

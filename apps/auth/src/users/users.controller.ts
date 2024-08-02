@@ -22,12 +22,12 @@ export class UsersController {
   constructor(private readonly service: UsersService) {}
 
   @Get()
-  async getAll(@Query() query: PaginationQuery) {
-    return await this.service.findAll(query);
+  async findMany(@Query() query: PaginationQuery) {
+    return await this.service.findMany(query);
   }
 
   @Get(':id')
-  async getOne(@Param('id') id: string) {
+  async findOne(@Param('id') id: string) {
     const user = await this.service.findOne(id);
 
     if (!user) {
@@ -39,7 +39,7 @@ export class UsersController {
 
   @Post()
   async createOne(@Body() body: CreateUserDto) {
-    return await this.service.create(body);
+    return await this.service.createOne(body);
   }
 
   @Patch(':id')
@@ -50,7 +50,7 @@ export class UsersController {
       throw new NotFoundException('User not found');
     }
 
-    return await this.service.update(id, body);
+    return await this.service.updateOne(id, body);
   }
 
   @Delete(':id')
@@ -61,6 +61,6 @@ export class UsersController {
       throw new NotFoundException('User not found');
     }
 
-    return await this.service.remove(id);
+    return await this.service.deleteOne(id);
   }
 }

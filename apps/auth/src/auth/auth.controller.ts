@@ -57,7 +57,7 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @Patch('profile')
   async updateProfile(@CurrentUser() user: User, @Body() body: Partial<User>) {
-    return await this.usersService.update(user.id, body);
+    return await this.usersService.updateOne(user.id, body);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -100,7 +100,7 @@ export class AuthController {
       throw new BadRequestException();
     }
 
-    const result = await this.usersService.update(user.id, { password });
+    const result = await this.usersService.updateOne(user.id, { password });
 
     await this.resetPasswordService.invalidateToken(token, user.email);
 

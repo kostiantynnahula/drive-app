@@ -33,7 +33,7 @@ export class OrganizationController {
       throw new BadRequestException('User exists');
     }
 
-    return await this.userService.create(payload);
+    return await this.userService.createOne(payload);
   }
 
   @UsePipes(new ValidationPipe())

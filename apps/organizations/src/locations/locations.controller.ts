@@ -25,7 +25,7 @@ export class LocationsController {
   ) {}
 
   @Get()
-  async getMany(@CurrentUser() user: User, @Query() query: SearchQuery) {
+  async findMany(@CurrentUser() user: User, @Query() query: SearchQuery) {
     if (!user.organizationId) {
       throw new BadRequestException('User does not belong to any organization');
     }
@@ -42,7 +42,7 @@ export class LocationsController {
   }
 
   @Get(':locationId')
-  async getOne(
+  async findOne(
     @CurrentUser() user: User,
     @Param('locationId') locationId: string,
   ) {

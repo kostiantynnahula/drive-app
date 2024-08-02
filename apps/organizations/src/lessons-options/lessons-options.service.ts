@@ -7,9 +7,7 @@ import { CreateLessonOptionDto } from './dto/create-lesson-option.dto';
 export class LessonsOptionsService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async findManyByOrganization(
-    organizationId: string,
-  ): Promise<LessonsOption[]> {
+  async findMany(organizationId: string): Promise<LessonsOption[]> {
     return await this.prismaService.lessonsOption.findMany({
       where: {
         organizationId,
@@ -17,7 +15,7 @@ export class LessonsOptionsService {
     });
   }
 
-  async findOneByOrganization(
+  async findOne(
     organizationId: string,
     optionId: string,
   ): Promise<LessonsOption> {
@@ -29,7 +27,7 @@ export class LessonsOptionsService {
     });
   }
 
-  async createOneByOrganization(
+  async createOne(
     organizationId: string,
     data: CreateLessonOptionDto,
   ): Promise<LessonsOption> {
@@ -41,7 +39,7 @@ export class LessonsOptionsService {
     });
   }
 
-  async createManyByOrganization(
+  async createMany(
     organizationId: string,
     data: CreateLessonOptionDto[],
   ): Promise<{ count: number }> {
@@ -52,7 +50,7 @@ export class LessonsOptionsService {
     });
   }
 
-  async updateOneByOrganization(
+  async updateOne(
     organizationId: string,
     optionId: string,
     data: CreateLessonOptionDto,
@@ -66,7 +64,7 @@ export class LessonsOptionsService {
     });
   }
 
-  async deleteOneByOrganization(
+  async deleteOne(
     organizationId: string,
     optionId: string,
   ): Promise<LessonsOption> {

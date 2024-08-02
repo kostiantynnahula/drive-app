@@ -23,6 +23,13 @@ export class S3Service {
     this.folder = folder;
   }
 
+  /**
+   * Upload file to S3
+   *
+   * @param fileName
+   * @param file
+   * @returns
+   */
   async upload(fileName: string, file: Buffer): Promise<string> {
     const bucket = this.configService.get('AWS_S3_BUCKET_NAME');
     const key = `${this.folder}/${getNewFileName(fileName)}`;
@@ -39,6 +46,11 @@ export class S3Service {
     return getS3PublicUrl(bucket, key, region);
   }
 
+  /**
+   * Uploda multiple files to S3
+   * @param files
+   * @returns
+   */
   async uploadMultiple(
     files: { fileName: string; file: Buffer }[],
   ): Promise<string[]> {
@@ -47,6 +59,11 @@ export class S3Service {
     );
   }
 
+  /**
+   * Delete file from S3
+   *
+   * @param {string} key
+   */
   async delete(key: string): Promise<void> {
     const bucket = this.configService.get('AWS_S3_BUCKET_NAME');
 

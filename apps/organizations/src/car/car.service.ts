@@ -18,7 +18,7 @@ export class CarService {
    *
    * @returns {Promise<Car[]>}
    */
-  async findAll(payload: GetManyDto): Promise<Car[]> {
+  async findMany(payload: GetManyDto): Promise<Car[]> {
     const message = await this.carsServiceClient.send(
       CarServiceEvents.FIND_ORGANIZATION_CARS,
       payload,
@@ -49,7 +49,7 @@ export class CarService {
     return await firstValueFrom(message);
   }
 
-  async create(organizationId: string, data: CreateCarDto) {
+  async createOne(organizationId: string, data: CreateCarDto) {
     const message = await this.carsServiceClient.send(
       CarServiceEvents.ADD_ORGANIZATION_CAR,
       { organizationId, ...data },
@@ -58,7 +58,7 @@ export class CarService {
     return await firstValueFrom(message);
   }
 
-  async update(organizationId: string, carId: string, data: UpdateCarDto) {
+  async updateOne(organizationId: string, carId: string, data: UpdateCarDto) {
     const message = await this.carsServiceClient.send(
       CarServiceEvents.UPDATE_ORGANIZATION_CAR,
       { organizationId, carId, ...data },
@@ -67,7 +67,7 @@ export class CarService {
     return await firstValueFrom(message);
   }
 
-  async delete(organizationId: string, carId: string) {
+  async deleteOne(organizationId: string, carId: string) {
     const message = await this.carsServiceClient.send(
       CarServiceEvents.DELETE_ORGANIZATION_CAR,
       { organizationId, carId },

@@ -10,6 +10,12 @@ export class UsersService {
     private readonly authServiceClient: ClientProxy,
   ) {}
 
+  /**
+   * Find one user by organization
+   * @param {string} userId
+   * @param {string} organizationId
+   * @returns {Promise<User>}
+   */
   async findOneByOrganization(
     userId: string,
     organizationId: string,

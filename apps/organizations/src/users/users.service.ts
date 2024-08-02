@@ -37,7 +37,7 @@ export class UsersService {
    * @param {string} organizationId
    * @returns {Promise<User[]>}
    */
-  async findAll(organizationId: string, query: UsersQuery): Promise<User[]> {
+  async findMany(organizationId: string, query: UsersQuery): Promise<User[]> {
     const message = await this.authServiceClient.send(
       AuthServiceEvents.FIND_USERS_BY_ORGANIZATION,
       {

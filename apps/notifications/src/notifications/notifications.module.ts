@@ -11,6 +11,11 @@ import { MailerModule } from '@nestjs-modules/mailer';
       isGlobal: true,
       validationSchema: Joi.object({
         TCP_PORT: Joi.number().required(),
+        SMTP_HOST: Joi.string().required(),
+        SMTP_PORT: Joi.number().required(),
+        SMTP_USER: Joi.string().required(),
+        SMTP_PASS: Joi.string().required(),
+        RESET_PASSWORD_HOST: Joi.string().required(),
       }),
     }),
     MailerModule.forRootAsync({

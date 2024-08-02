@@ -22,7 +22,7 @@ export class PhotosController {
 
   @UsePipes(new ValidationPipe())
   @MessagePattern(CarServiceEvents.FIND_CAR_PHOTOS)
-  async findPhotos({ carId }: GetPhotosDto) {
+  async findMany({ carId }: GetPhotosDto) {
     const car = await this.carsService.findOne(carId);
 
     if (!car) {
@@ -34,7 +34,7 @@ export class PhotosController {
 
   @UsePipes(new ValidationPipe())
   @MessagePattern(CarServiceEvents.ADD_CAR_PHOTOS)
-  async addPhotos({ carId, urls }: CreatePhotoDto) {
+  async addMany({ carId, urls }: CreatePhotoDto) {
     const car = await this.carsService.findOne(carId);
 
     if (!car) {
@@ -50,7 +50,7 @@ export class PhotosController {
 
   @UsePipes(new ValidationPipe())
   @MessagePattern(CarServiceEvents.FIND_CAR_PHOTO)
-  async findPhoto({ carId, photoId }: GetPhotoDto) {
+  async findOne({ carId, photoId }: GetPhotoDto) {
     const car = await this.carsService.findOne(carId);
 
     if (!car) {
@@ -62,7 +62,7 @@ export class PhotosController {
 
   @UsePipes(new ValidationPipe())
   @MessagePattern(CarServiceEvents.DELETE_CAR_PHOTO)
-  async deletePhotos({ carId, photoId }: DeletePhotoDto) {
+  async deleteMany({ carId, photoId }: DeletePhotoDto) {
     const car = await this.carsService.findOne(carId);
 
     if (!car) {

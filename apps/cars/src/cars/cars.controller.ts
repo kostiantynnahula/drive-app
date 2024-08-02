@@ -19,7 +19,7 @@ export class CarsController {
   ) {}
 
   @MessagePattern(CarServiceEvents.FIND_ORGANIZATION_CARS)
-  async getMany(payload: OrganizationCarsDto) {
+  async findMany(payload: OrganizationCarsDto) {
     return await this.organizationCarsServuce.findMany(payload);
   }
 
@@ -32,7 +32,7 @@ export class CarsController {
   }
 
   @MessagePattern(CarServiceEvents.FIND_ORGANIZATION_CAR)
-  async getOne({ organizationId, carId }: OrganizationCarDto) {
+  async findOne({ organizationId, carId }: OrganizationCarDto) {
     return await this.organizationCarsServuce.findOne(carId, organizationId);
   }
 

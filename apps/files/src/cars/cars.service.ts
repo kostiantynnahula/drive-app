@@ -15,6 +15,12 @@ export class CarsService extends S3Service {
     super(configService, configService.get('AWS_S3_CARS_FOLDER'));
   }
 
+  /**
+   * Upload photo to S3
+   *
+   * @param {File[]} files
+   * @returns {Promise<string[]>}
+   */
   async uploadPhoto(files: File[]): Promise<string[]> {
     const uploadDetailPairs = files.map((file) => ({
       fileName: file.originalname,
@@ -24,9 +30,13 @@ export class CarsService extends S3Service {
     return await this.uploadMultiple(uploadDetailPairs);
   }
 
+  /**
+   * Add car photo
+   *
+   * @param {string} carId
+   * @param {string[]} urls
+   */
   async addCarPhoto(carId: string, urls: string[]): Promise<void> {
-    console.log('add car photo sent', carId, urls);
-
     const message = await this.carsServiceClient.send(
       CarServiceEvents.ADD_CAR_PHOTOS,
       {
@@ -38,6 +48,12 @@ export class CarsService extends S3Service {
     return await firstValueFrom(message);
   }
 
+  /**
+   * Find car photos
+   *
+   * @param {string} carId
+   * @returns {Promise<Photo>}
+   */
   async findCarPhotos(carId: string): Promise<Photo> {
     const message = await this.carsServiceClient.send(
       CarServiceEvents.FIND_CAR_PHOTOS,
@@ -49,6 +65,13 @@ export class CarsService extends S3Service {
     return await firstValueFrom(message);
   }
 
+  /**
+   * Find car photo
+   *
+   * @param {string} carId
+   * @param {string} photoId
+   * @returns {Promise<Photo>}
+   */
   async findCarPhoto(carId: string, photoId: string): Promise<Photo> {
     const message = await this.carsServiceClient.send(
       CarServiceEvents.FIND_CAR_PHOTO,
@@ -61,6 +84,12 @@ export class CarsService extends S3Service {
     return await firstValueFrom(message);
   }
 
+  /**
+   * Delete car photo
+   *
+   * @param {string} carId
+   * @param {string} photoId
+   */
   async deleteCarPhoto(carId: string, photoId: string) {
     const message = await this.carsServiceClient.send(
       CarServiceEvents.DELETE_CAR_PHOTO,

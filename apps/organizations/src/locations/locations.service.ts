@@ -54,7 +54,7 @@ export class LocationsService {
     data: UpdateLocationDto,
   ): Promise<Location> {
     return await this.prismaService.location.update({
-      where: { id },
+      where: { id, organizationId },
       data,
     });
   }
