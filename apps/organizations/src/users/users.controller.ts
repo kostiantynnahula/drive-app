@@ -7,6 +7,7 @@ import {
   NotFoundException,
   Body,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { OrganizationsService } from '../organizations/organizations.service';
@@ -15,8 +16,10 @@ import { LocationsService } from '../locations/locations.service';
 import { UsersQuery } from './dto/users.query';
 import { CreateUserDto } from './dto/create-user.dto';
 import { CarService } from '../car/car.service';
+import { CurrentUser, JwtAuthGuard, User } from '@app/common';
 
-@Controller('organization')
+@UseGuards(JwtAuthGuard)
+@Controller('users')
 export class UsersController {
   constructor(
     private readonly service: UsersService,
@@ -25,43 +28,40 @@ export class UsersController {
     private readonly organizationsService: OrganizationsService,
   ) {}
 
-  @Post(':organizationId/user')
-  async createUser(
-    @Param('organizationId') organizationId: string,
-    @Body() body: CreateUserDto,
-  ) {
-    const organization =
-      await this.organizationsService.findOne(organizationId);
+  @Post()
+  async createUser(@CurrentUser() user: User, @Body() body: CreateUserDto) {
+    const organization = await this.organizationsService.findOne(
+      user.organizationId,
+    );
 
     if (!organization) {
       throw new NotFoundException('Organization not found');
     }
 
-    return await this.service.createOne(organizationId, body);
+    return await this.service.createOne(user.organizationId, body);
   }
 
-  @Get(':organizationId/users')
-  async findMany(
-    @Param('organizationId') organizationId: string,
-    @Query() query: UsersQuery,
-  ) {
-    const organization =
-      await this.organizationsService.findOne(organizationId);
+  @Get()
+  async findMany(@CurrentUser() user: User, @Query() query: UsersQuery) {
+    const organization = await this.organizationsService.findOne(
+      user.organizationId,
+    );
 
     if (!organization) {
       throw new NotFoundException('Organization not found');
     }
 
-    const users = await this.service.findAll(organizationId, query);
+    const users = await this.service.findAll(user.organizationId, query);
 
-    const userLocationsIds = users.map((user) => user.locationId);
+    const ids = users.map((user) => user.locationId);
 
-    const locations = await this.locationsService.findMany(organizationId, {
-      ids: userLocationsIds,
-    });
+    const locations = await this.locationsService.findMany(
+      user.organizationId,
+      { ids },
+    );
 
     const cars = await this.carService.findAll({
-      organizationId,
+      organizationId: user.organizationId,
       locationId: query.locationId,
       transmission: query.transmission,
     });
@@ -87,24 +87,23 @@ export class UsersController {
     return result;
   }
 
-  @Get(':organizationId/users/:userId')
-  async findOne(
-    @Param('organizationId') organizationId: string,
-    @Param('userId') userId: string,
-  ) {
-    const organization =
-      await this.organizationsService.findOne(organizationId);
+  @Get('users/:userId')
+  async findOne(@CurrentUser() user: User, @Param('userId') userId: string) {
+    const organization = await this.organizationsService.findOne(
+      user.organizationId,
+    );
 
     if (!organization) {
       throw new NotFoundException('Organization not found');
     }
 
-    const car = await this.carService.findOneByOwner(organizationId, userId);
-
-    const user = await this.service.findOne(userId, organizationId);
+    const car = await this.carService.findOneByOwner(
+      user.organizationId,
+      userId,
+    );
 
     const location = await this.locationsService.findOne(
-      organizationId,
+      user.organizationId,
       user.locationId,
     );
 
@@ -115,15 +114,16 @@ export class UsersController {
     };
   }
 
-  @Post(':organizationId/user/add')
+  @Post('user/add')
   async addUserToOrganization(
-    @Param('organizationId') organizationId: string,
+    @CurrentUser() user: User,
     @Body() body: AddUserDto,
   ) {
     const { userId, locationId } = body;
 
-    const organization =
-      await this.organizationsService.findOne(organizationId);
+    const organization = await this.organizationsService.findOne(
+      user.organizationId,
+    );
 
     if (!organization) {
       throw new NotFoundException('Organization not found');
@@ -145,13 +145,14 @@ export class UsersController {
     );
   }
 
-  @Delete(':organizationId/users/:userId')
+  @Delete('users/:userId')
   async removeUserFromOrganization(
-    @Param('organizationId') organizationId: string,
+    @CurrentUser() user: User,
     @Param('userId') userId: string,
   ) {
-    const organization =
-      await this.organizationsService.findOne(organizationId);
+    const organization = await this.organizationsService.findOne(
+      user.organizationId,
+    );
 
     if (!organization) {
       throw new NotFoundException('Organization not found');

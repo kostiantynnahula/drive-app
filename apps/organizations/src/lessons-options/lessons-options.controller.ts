@@ -7,34 +7,40 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { LessonsOptionsService } from './lessons-options.service';
 import { CreateLessonOptionDto } from './dto/create-lesson-option.dto';
+import { CurrentUser, JwtAuthGuard, User } from '@app/common';
 
+@UseGuards(JwtAuthGuard)
 @Controller('lessons-options')
 export class LessonsOptionsController {
   constructor(private readonly service: LessonsOptionsService) {}
 
-  @Get(':organizationId')
-  async findMany(@Param('organizationId') organizationId: string) {
-    return await this.service.findManyByOrganization(organizationId);
+  @Get()
+  async findMany(@CurrentUser() user: User) {
+    return await this.service.findManyByOrganization(user.organizationId);
   }
 
-  @Get(':organizationId/:optionId')
+  @Get(':optionId')
   async findOne(
-    @Param('organizationId') organizationId: string,
+    @CurrentUser() user: User,
     @Param('optionId') optionId: string,
   ) {
-    return await this.service.findOneByOrganization(organizationId, optionId);
+    return await this.service.findOneByOrganization(
+      user.organizationId,
+      optionId,
+    );
   }
 
-  @Post(':organizationId')
+  @Post()
   async createOne(
-    @Param('organizationId') organizationId: string,
+    @CurrentUser() user: User,
     @Body() body: CreateLessonOptionDto,
   ) {
     const option = await this.service.findOneByOrganizationAndType(
-      organizationId,
+      user.organizationId,
       body.lessonType,
     );
 
@@ -42,27 +48,33 @@ export class LessonsOptionsController {
       throw new BadRequestException('Option already exists');
     }
 
-    return await this.service.createOneByOrganization(organizationId, body);
+    return await this.service.createOneByOrganization(
+      user.organizationId,
+      body,
+    );
   }
 
-  @Patch(':organizationId/:optionId')
+  @Patch(':optionId')
   async updateOne(
-    @Param('organizationId') organizationId: string,
+    @CurrentUser() user: User,
     @Param('optionId') optionId: string,
     @Body() body: CreateLessonOptionDto,
   ) {
     return await this.service.updateOneByOrganization(
-      organizationId,
+      user.organizationId,
       optionId,
       body,
     );
   }
 
-  @Delete(':organizationId/:optionId')
+  @Delete(':optionId')
   async deleteOne(
-    @Param('organizationId') organizationId: string,
+    @CurrentUser() user: User,
     @Param('optionId') optionId: string,
   ) {
-    return await this.service.deleteOneByOrganization(organizationId, optionId);
+    return await this.service.deleteOneByOrganization(
+      user.organizationId,
+      optionId,
+    );
   }
 }

@@ -6,29 +6,11 @@ import { PrismaModule } from '../prisma/prisma.module';
 import { UniqueNameValidator } from './validators/unique-name.validator';
 import { UniqueEmailValidator } from './validators/unique-email.validator';
 import { UniquePhoneValidator } from './validators/unique-phone.validator';
-import { ConfigService } from '@nestjs/config';
-import { ClientsModule, Transport } from '@nestjs/microservices';
-import { AUTH_SERVICE } from '@app/common';
 import { LessonsOptionsModule } from '../lessons-options/lessons-options.module';
+import { AuthModule } from './../../utils/modules/auth.module';
 
 @Module({
-  imports: [
-    PrismaModule,
-    LessonsOptionsModule,
-    ClientsModule.registerAsync([
-      {
-        name: AUTH_SERVICE,
-        useFactory: (configService: ConfigService) => ({
-          transport: Transport.TCP,
-          options: {
-            host: configService.get('AUTH_HOST'),
-            port: configService.get('AUTH_PORT'),
-          },
-        }),
-        inject: [ConfigService],
-      },
-    ]),
-  ],
+  imports: [PrismaModule, LessonsOptionsModule, AuthModule()],
   controllers: [OrganizationsController, OrganizationsTcpController],
   providers: [
     OrganizationsService,

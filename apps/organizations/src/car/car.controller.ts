@@ -7,33 +7,34 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { CarService } from './car.service';
 import { CreateCarDto } from './dto/create-car.dto';
 import { UpdateCarDto } from './dto/update-car.dto';
 import { LocationsService } from '../locations/locations.service';
-import { UsersService } from '../users/users.service';
-import { Role } from '@app/common';
+import { CurrentUser, JwtAuthGuard, Role, User } from '@app/common';
 
-@Controller('organization')
+@UseGuards(JwtAuthGuard)
+@Controller('cars')
 export class CarController {
   constructor(
     private readonly service: CarService,
-    private readonly usersService: UsersService,
     private readonly locationService: LocationsService,
   ) {}
 
-  @Post(':id/car')
-  async createCar(@Param('id') id: string, @Body() body: CreateCarDto) {
+  @Post()
+  async createCar(@CurrentUser() user: User, @Body() body: CreateCarDto) {
     const { locationId, ownerId } = body;
 
-    const location = await this.locationService.findOne(id, locationId);
+    const location = await this.locationService.findOne(
+      user.organizationId,
+      locationId,
+    );
 
     if (!location) {
       throw new BadRequestException('Location not found');
     }
-
-    const user = await this.usersService.findOne(ownerId, id);
 
     if (!user) {
       throw new BadRequestException('User not found');
@@ -49,36 +50,36 @@ export class CarController {
       }
     }
 
-    const car = await this.service.findOneByOwner(id, ownerId);
+    const car = await this.service.findOneByOwner(user.organizationId, ownerId);
 
     if (car) {
       throw new BadRequestException('User already has a car');
     }
 
-    return await this.service.create(id, body);
+    return await this.service.create(user.organizationId, body);
   }
 
-  @Get(':id/cars')
-  async findCars(@Param('id') id: string) {
-    return await this.service.findAll({ organizationId: id });
+  @Get()
+  async findCars(@CurrentUser() user: User) {
+    return await this.service.findAll({ organizationId: user.organizationId });
   }
 
-  @Get(':id/car/:carId')
-  async findCar(@Param('id') id: string, @Param('carId') carId: string) {
-    return await this.service.findOne(id, carId);
+  @Get(':carId')
+  async findCar(@CurrentUser() user: User, @Param('carId') carId: string) {
+    return await this.service.findOne(user.organizationId, carId);
   }
 
-  @Patch(':id/car/:carId')
+  @Patch(':carId')
   async updateCar(
-    @Param('id') id: string,
     @Param('carId') carId: string,
     @Body() body: UpdateCarDto,
+    @CurrentUser() user: User,
   ) {
-    return await this.service.update(id, carId, body);
+    return await this.service.update(user.organizationId, carId, body);
   }
 
-  @Delete(':id/car/:carId')
-  async deleteCar(@Param('id') id: string, @Param('carId') carId: string) {
-    return await this.service.delete(id, carId);
+  @Delete(':carId')
+  async deleteCar(@CurrentUser() user: User, @Param('carId') carId: string) {
+    return await this.service.delete(user.organizationId, carId);
   }
 }

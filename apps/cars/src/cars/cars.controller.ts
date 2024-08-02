@@ -25,7 +25,6 @@ export class CarsController {
 
   @MessagePattern(CarServiceEvents.FIND_ORGANIZATION_CAR_BY_OWNER)
   async findOneByOwner({ ownerId, organizationId }: OrganizationOwnerCar) {
-    console.log('find one by owner');
     return await this.organizationCarsServuce.findOneByOwner(
       organizationId,
       ownerId,

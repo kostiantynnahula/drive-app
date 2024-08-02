@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -7,28 +8,25 @@ import {
   Param,
   Patch,
   Post,
-  Query,
   UseGuards,
 } from '@nestjs/common';
 import { OrganizationsService } from './organizations.service';
 import { CreateOrganizationDto } from './dto/create.dto';
 import { UpdateOrganizationDto } from './dto/update.dto';
 import { CurrentUser, JwtAuthGuard, User } from '@app/common';
-import { SearchQuery } from './dto/search.query';
 
 @UseGuards(JwtAuthGuard)
-@Controller('organizations')
+@Controller('organization')
 export class OrganizationsController {
   constructor(private readonly organizationsService: OrganizationsService) {}
 
   @Get()
-  async getMany(@Query() query: SearchQuery) {
-    return await this.organizationsService.findMany(query);
-  }
+  async getOne(@CurrentUser() user: User) {
+    if (!user.organizationId) {
+      throw new NotFoundException('User does not belong to any organization');
+    }
 
-  @Get(':id')
-  async getOne(@Param('id') id: string) {
-    const result = await this.organizationsService.findOne(id);
+    const result = await this.organizationsService.findOne(user.organizationId);
 
     if (!result) {
       throw new NotFoundException('Organization not found');
@@ -45,16 +43,32 @@ export class OrganizationsController {
     return await this.organizationsService.createOne(body, user.id);
   }
 
-  @Patch(':id')
+  @Patch()
   async updateOne(
-    @Param('id') id: string,
     @Body() body: UpdateOrganizationDto,
+    @CurrentUser() user: User,
   ) {
-    return await this.organizationsService.updateOne(id, body);
+    if (!user.organizationId) {
+      throw new BadRequestException('User does not belong to any organization');
+    }
+
+    const organization = await this.organizationsService.findOne(
+      user.organizationId,
+    );
+
+    if (!organization) {
+      throw new NotFoundException('Organization not found');
+    }
+
+    return await this.organizationsService.updateOne(user.organizationId, body);
   }
 
   @Delete(':id')
-  async deleteOne(@Param('id') id: string) {
+  async deleteOne(@Param('id') id: string, @CurrentUser() user: User) {
+    if (!user.organizationId) {
+      throw new BadRequestException('User does not belong to any organization');
+    }
+
     const organization = await this.organizationsService.findOne(id);
 
     if (!organization) {

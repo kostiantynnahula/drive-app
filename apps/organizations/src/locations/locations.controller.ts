@@ -7,13 +7,16 @@ import {
   Param,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { LocationsService } from './locations.service';
 import { CreateLocationDto } from './dto/create.dto';
 import { UpdateLocationDto } from './dto/update.dto';
 import { OrganizationsService } from './../organizations/organizations.service';
 import { SearchQuery } from './dto/saerch.query';
+import { CurrentUser, JwtAuthGuard, User } from '@app/common';
 
+@UseGuards(JwtAuthGuard)
 @Controller('locations')
 export class LocationsController {
   constructor(
@@ -21,60 +24,77 @@ export class LocationsController {
     private readonly organizationService: OrganizationsService,
   ) {}
 
-  @Get(':organizationId')
-  async getMany(
-    @Param('organizationId') organizationId: string,
-    @Query() query: SearchQuery,
-  ) {
-    const organization = await this.organizationService.findOne(organizationId);
+  @Get()
+  async getMany(@CurrentUser() user: User, @Query() query: SearchQuery) {
+    if (!user.organizationId) {
+      throw new BadRequestException('User does not belong to any organization');
+    }
+
+    const organization = await this.organizationService.findOne(
+      user.organizationId,
+    );
 
     if (!organization) {
       throw new BadRequestException('Organization not found');
     }
 
-    return await this.locationsService.findMany(organizationId, query);
+    return await this.locationsService.findMany(user.organizationId, query);
   }
 
-  @Get(':organizationId/:locationId')
+  @Get(':locationId')
   async getOne(
-    @Param('organizationId') organizationId: string,
+    @CurrentUser() user: User,
     @Param('locationId') locationId: string,
   ) {
-    const organization = await this.organizationService.findOne(organizationId);
+    const organization = await this.organizationService.findOne(
+      user.organizationId,
+    );
 
     if (!organization) {
       throw new BadRequestException('Organization not found');
     }
 
-    return await this.locationsService.findOne(organizationId, locationId);
+    return await this.locationsService.findOne(user.organizationId, locationId);
   }
 
-  @Post(':organizationId')
-  async createOne(
-    @Param('organizationId') organizationId: string,
-    @Body() data: CreateLocationDto,
-  ) {
-    return await this.locationsService.createOne(organizationId, data);
+  @Post()
+  async createOne(@CurrentUser() user: User, @Body() data: CreateLocationDto) {
+    if (!user.organizationId) {
+      throw new BadRequestException('User does not belong to any organization');
+    }
+
+    return await this.locationsService.createOne(user.organizationId, data);
   }
 
-  @Post(':organizationId/:locationId')
+  @Post(':locationId')
   async updateOne(
-    @Param('organizationId') organizationId: string,
+    @CurrentUser() user: User,
     @Param('locationId') locationId: string,
     @Body() data: UpdateLocationDto,
   ) {
+    if (!user.organizationId) {
+      throw new BadRequestException('User does not belong to any organization');
+    }
+
     return await this.locationsService.updateOne(
-      organizationId,
+      user.organizationId,
       locationId,
       data,
     );
   }
 
-  @Delete(':organizationId/:locationId')
+  @Delete(':locationId')
   async deleteOne(
-    @Param('organizationId') organizationId: string,
+    @CurrentUser() user: User,
     @Param('locationId') locationId: string,
   ) {
-    return await this.locationsService.deleteOne(organizationId, locationId);
+    if (!user.organizationId) {
+      throw new BadRequestException('User does not belong to any organization');
+    }
+
+    return await this.locationsService.deleteOne(
+      user.organizationId,
+      locationId,
+    );
   }
 }
