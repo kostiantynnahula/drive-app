@@ -11,8 +11,8 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { OrganizationsService } from './organizations.service';
-import { CreateOrganizationDto } from './dto/create.dto';
-import { UpdateOrganizationDto } from './dto/update.dto';
+import { CreateOrganizationDto } from './dto/create-organization.dto';
+import { UpdateOrganizationDto } from './dto/update-organization.dto';
 import { CurrentUser, JwtAuthGuard, User } from '@app/common';
 
 @UseGuards(JwtAuthGuard)

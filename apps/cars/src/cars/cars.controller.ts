@@ -1,7 +1,7 @@
 import { BadRequestException, Controller } from '@nestjs/common';
 import { CarsService } from './cars.service';
-import { CreateCarDto } from './dto/create.dto';
-import { UpdateCarDto } from './dto/update.dto';
+import { CreateCarDto } from './dto/create-car.dto';
+import { UpdateCarDto } from './dto/update-car.dto';
 import { UsersService } from '../users/users.service';
 import { MessagePattern } from '@nestjs/microservices';
 import { CarServiceEvents } from '@app/common';

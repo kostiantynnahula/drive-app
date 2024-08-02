@@ -1,5 +1,5 @@
 import { PartialType } from '@nestjs/mapped-types';
-import { CreateOrganizationDto } from './create.dto';
+import { CreateOrganizationDto } from './create-organization.dto';
 import { IsOptional } from 'class-validator';
 import { CreateLessonOptionDto } from '../../lessons-options/dto/create-lesson-option.dto';
 

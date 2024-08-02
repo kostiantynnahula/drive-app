@@ -1,6 +1,6 @@
 import { IsDefined, IsEnum, IsOptional } from 'class-validator';
 
-export class GetManyDto {
+export class GetCarsDto {
   @IsDefined()
   organizationId: string;
 

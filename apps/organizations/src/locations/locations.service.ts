@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { CreateLocationDto } from './dto/create.dto';
-import { UpdateLocationDto } from './dto/update.dto';
+import { CreateLocationDto } from './dto/create-location.dto';
+import { UpdateLocationDto } from './dto/update-location.dto';
 import { Location } from '.prisma/client';
-import { SearchQuery } from './dto/saerch.query';
+import { SearchQuery } from './dto/search.query';
 
 @Injectable()
 export class LocationsService {

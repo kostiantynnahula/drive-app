@@ -10,10 +10,10 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { LocationsService } from './locations.service';
-import { CreateLocationDto } from './dto/create.dto';
-import { UpdateLocationDto } from './dto/update.dto';
+import { CreateLocationDto } from './dto/create-location.dto';
+import { UpdateLocationDto } from './dto/update-location.dto';
 import { OrganizationsService } from './../organizations/organizations.service';
-import { SearchQuery } from './dto/saerch.query';
+import { SearchQuery } from './dto/search.query';
 import { CurrentUser, JwtAuthGuard, User } from '@app/common';
 
 @UseGuards(JwtAuthGuard)

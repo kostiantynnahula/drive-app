@@ -4,7 +4,7 @@ import { CARS_SERVICE, CarServiceEvents, Car } from '@app/common';
 import { firstValueFrom } from 'rxjs';
 import { CreateCarDto } from './dto/create-car.dto';
 import { UpdateCarDto } from './dto/update-car.dto';
-import { GetManyDto } from './dto/get-many.dto';
+import { GetCarsDto } from './dto/get-many.dto';
 
 @Injectable()
 export class CarService {
@@ -18,7 +18,7 @@ export class CarService {
    *
    * @returns {Promise<Car[]>}
    */
-  async findMany(payload: GetManyDto): Promise<Car[]> {
+  async findMany(payload: GetCarsDto): Promise<Car[]> {
     const message = await this.carsServiceClient.send(
       CarServiceEvents.FIND_ORGANIZATION_CARS,
       payload,

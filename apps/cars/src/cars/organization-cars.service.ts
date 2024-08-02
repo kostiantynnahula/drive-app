@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { CreateCarDto } from './dto/create.dto';
-import { UpdateCarDto } from './dto/update.dto';
+import { CreateCarDto } from './dto/create-car.dto';
+import { UpdateCarDto } from './dto/update-car.dto';
 import { Car } from '.prisma/client';
 import { OrganizationCarsDto } from './dto/organization-cars.dto';
 
