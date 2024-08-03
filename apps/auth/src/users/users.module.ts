@@ -20,8 +20,8 @@ import { NotificationsModule } from '../notifications/notifications.module';
         useFactory: (configService: ConfigService) => ({
           transport: Transport.TCP,
           options: {
-            host: configService.get('ORGANIZATION_HOST'),
-            port: configService.get('ORGANIZATION_PORT'),
+            host: configService.get('ORGANIZATION_SERVICE_HOST'),
+            port: configService.get('ORGANIZATION_SERVICE_PORT'),
           },
         }),
         inject: [ConfigService],

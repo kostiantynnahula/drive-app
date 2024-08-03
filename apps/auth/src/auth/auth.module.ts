@@ -35,8 +35,8 @@ import { NotificationsModule } from '../notifications/notifications.module';
         useFactory: (configService: ConfigService) => ({
           transport: Transport.TCP,
           options: {
-            host: configService.get('RESET_PASSWORD_HOST'),
-            port: configService.get('RESET_PASSWORD_PORT'),
+            host: configService.get('RESET_PASSWORD_SERVICE_HOST'),
+            port: configService.get('RESET_PASSWORD_SERVICE_PORT'),
           },
         }),
         inject: [ConfigService],

@@ -9,7 +9,7 @@ import * as Joi from 'joi';
     ConfigModule.forRoot({
       isGlobal: true,
       validationSchema: Joi.object({
-        PORT: Joi.number().required(),
+        HTTP_PORT: Joi.number().required(),
       }),
     }),
   ],

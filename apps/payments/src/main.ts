@@ -10,7 +10,7 @@ async function bootstrap() {
     transport: Transport.TCP,
     options: {
       host: '0.0.0.0',
-      port: configService.get('PORT'),
+      port: configService.get('HTTP_PORT'),
     },
   });
   await app.startAllMicroservices();
