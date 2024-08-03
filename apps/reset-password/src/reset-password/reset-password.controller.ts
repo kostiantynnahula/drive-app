@@ -6,7 +6,7 @@ import { EmailDto } from './dto/email.dto';
 import { TokenDto } from './dto/token.dto';
 
 @Controller()
-export class ResetPasswordTcpController {
+export class ResetPasswordController {
   constructor(private readonly service: ResetPasswordService) {}
 
   @EventPattern(ResetPasswordEvent.FORGOT_PASSWORD)

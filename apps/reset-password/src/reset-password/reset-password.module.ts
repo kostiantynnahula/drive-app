@@ -4,8 +4,7 @@ import { PrismaModule } from '../prisma/prisma.module';
 import { ConfigService } from '@nestjs/config';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { NOTIFICATION_SERVICE } from '@app/common';
-// import { ResetPasswordTcpService } from './reset-password.tcp.service';
-import { ResetPasswordTcpController } from './reset-password.tcp.controller';
+import { ResetPasswordController } from './reset-password.controller';
 
 @Module({
   imports: [
@@ -24,7 +23,7 @@ import { ResetPasswordTcpController } from './reset-password.tcp.controller';
       },
     ]),
   ],
-  controllers: [ResetPasswordTcpController],
+  controllers: [ResetPasswordController],
   providers: [ResetPasswordService],
   exports: [ResetPasswordService],
 })

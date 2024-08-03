@@ -6,11 +6,7 @@ export const FILES_SERVICE = 'files';
 export const CARS_SERVICE = 'cars';
 export const RESET_PASSWORD_SERVICE = 'reset-password';
 
-// NOTIFICATIONS SERVICE MESSAGES
-export const RESET_PASSWORD_EMAIL = 'reset-password';
-export const SUCCESSFUL_REGISTER_EMAIL = 'successful-register';
-export const SUCCESSFUL_RESET_PASSWORD_EMAIL = 'success-register-password';
-
+// RESET PASSWORD EVENTS
 export enum ResetPasswordEvent {
   FORGOT_PASSWORD,
   VERIFY_TOKEN,
@@ -19,7 +15,7 @@ export enum ResetPasswordEvent {
   RESET_PASSWORD,
 }
 
-// AUTH SERViCE MESSAGES
+// AUTH SERVICE EVENTS
 export enum AuthServiceEvents {
   AUTHENTICATE,
   UPDATE_USER_LOGO,
@@ -31,13 +27,13 @@ export enum AuthServiceEvents {
   CREATE_USER_TO_ORGANIZATION,
 }
 
-// ORGANIZATION SERVICE MESSAGES
+// ORGANIZATION SERVICE EVENTS
 export enum OrganizationServiceEvents {
   FIND_ORGANIZATION,
   UPDATE_ORGANIZATION_LOGO,
 }
 
-// NOTIFICATIONS SERVICE MESSAGES
+// NOTIFICATIONS SERVICE EVENTS
 export enum NotificationsServiceEvents {
   FORGOT_PASSWORD,
   SUCCESSFUL_PASSWORD_CHANGED,
@@ -46,7 +42,7 @@ export enum NotificationsServiceEvents {
   USER_REMOVED_FROM_ORGANIZATION,
 }
 
-// CARS SERVICE MESSAGES
+// CARS SERVICE EVENTS
 export enum CarServiceEvents {
   ADD_CAR_PHOTOS,
   FIND_CAR_PHOTOS,
@@ -60,6 +56,7 @@ export enum CarServiceEvents {
   FIND_ORGANIZATION_CAR_BY_OWNER,
 }
 
+// FILES SERVICE EVENTS
 export enum FileServiceEvents {
   DELETE_CAR_PHOTOS,
 }
