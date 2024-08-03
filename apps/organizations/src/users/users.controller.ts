@@ -17,7 +17,10 @@ import { UsersQuery } from './dto/users.query';
 import { CreateUserDto } from './dto/create-user.dto';
 import { CarService } from '../car/car.service';
 import { CurrentUser, JwtAuthGuard, User } from '@app/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Users')
+@ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
 @Controller('users')
 export class UsersController {

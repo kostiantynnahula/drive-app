@@ -2,10 +2,10 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import * as cookieParser from 'cookie-parser';
 import { Transport } from '@nestjs/microservices';
 import { useContainer } from 'class-validator';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import * as cookieParser from 'cookie-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -15,7 +15,6 @@ async function bootstrap() {
     .setTitle('Auth microservice')
     .setDescription('The auth API microservice')
     .setVersion('1.0')
-    .addTag('auth')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

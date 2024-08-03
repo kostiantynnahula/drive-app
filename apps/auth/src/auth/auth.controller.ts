@@ -21,7 +21,9 @@ import { ForgotPasswordDto } from './dto/forgot-password.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
 import { ResetPasswordService } from './reset-password.service';
 import { NotificationsService } from '../notifications/notifications.service';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
   constructor(
@@ -48,12 +50,14 @@ export class AuthController {
     return result;
   }
 
+  @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Get('profile')
   async profile(@CurrentUser() user: User) {
     return user;
   }
 
+  @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Patch('profile')
   async updateProfile(@CurrentUser() user: User, @Body() body: Partial<User>) {

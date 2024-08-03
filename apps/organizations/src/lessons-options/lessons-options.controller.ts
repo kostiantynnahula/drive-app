@@ -12,7 +12,10 @@ import {
 import { LessonsOptionsService } from './lessons-options.service';
 import { CreateLessonOptionDto } from './dto/create-lesson-option.dto';
 import { CurrentUser, JwtAuthGuard, User } from '@app/common';
+import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 
+@ApiTags('Lessons Options')
+@ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
 @Controller('lessons-options')
 export class LessonsOptionsController {

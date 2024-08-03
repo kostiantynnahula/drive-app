@@ -15,6 +15,7 @@ async function bootstrap() {
     .setTitle('Cars microservice')
     .setDescription('The cars API microservice')
     .setVersion('1.0')
+    .addCookieAuth()
     .addTag('cars')
     .build();
 
@@ -46,6 +47,5 @@ async function bootstrap() {
   );
 
   await app.startAllMicroservices();
-  await app.listen(configService.get('HTTP_PORT'));
 }
 bootstrap();

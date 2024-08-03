@@ -15,7 +15,10 @@ import { UpdateLocationDto } from './dto/update-location.dto';
 import { OrganizationsService } from './../organizations/organizations.service';
 import { SearchQuery } from './dto/search.query';
 import { CurrentUser, JwtAuthGuard, User } from '@app/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Locations')
+@ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
 @Controller('locations')
 export class LocationsController {

@@ -14,7 +14,10 @@ import { OrganizationsService } from './organizations.service';
 import { CreateOrganizationDto } from './dto/create-organization.dto';
 import { UpdateOrganizationDto } from './dto/update-organization.dto';
 import { CurrentUser, JwtAuthGuard, User } from '@app/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Organizations')
+@ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
 @Controller('organization')
 export class OrganizationsController {

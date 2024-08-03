@@ -14,7 +14,10 @@ import { CreateCarDto } from './dto/create-car.dto';
 import { UpdateCarDto } from './dto/update-car.dto';
 import { LocationsService } from '../locations/locations.service';
 import { CurrentUser, JwtAuthGuard, Role, User } from '@app/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Cars')
+@ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
 @Controller('cars')
 export class CarController {

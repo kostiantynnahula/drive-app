@@ -12,7 +12,10 @@ import { CarsService } from './cars.service';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { FileValidationPipe } from './pipes/file-validation.pipe';
 import { File } from '@app/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Cars')
+@ApiBearerAuth()
 @Controller('cars')
 export class CarsController {
   constructor(private readonly service: CarsService) {}

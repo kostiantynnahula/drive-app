@@ -11,7 +11,10 @@ import {
 } from '@nestjs/common';
 import { OrganizationService } from './organization.service';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Organization')
+@ApiBearerAuth()
 @Controller('organization')
 export class OrganizationController {
   constructor(private readonly service: OrganizationService) {}

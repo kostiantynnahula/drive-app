@@ -15,7 +15,7 @@ async function bootstrap() {
     .setTitle('Organization microservice')
     .setDescription('The organization API microservice')
     .setVersion('1.0')
-    .addTag('organization')
+    .addCookieAuth()
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
