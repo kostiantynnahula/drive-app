@@ -15,17 +15,17 @@ export class CarsController {
   constructor(
     private readonly carsService: CarsService,
     private readonly usersService: UsersService,
-    private readonly organizationCarsServuce: OrganizationCarsService,
+    private readonly organizationCarsService: OrganizationCarsService,
   ) {}
 
   @MessagePattern(CarServiceEvents.FIND_ORGANIZATION_CARS)
   async findMany(payload: OrganizationCarsDto) {
-    return await this.organizationCarsServuce.findMany(payload);
+    return await this.organizationCarsService.findMany(payload);
   }
 
   @MessagePattern(CarServiceEvents.FIND_ORGANIZATION_CAR_BY_OWNER)
   async findOneByOwner({ ownerId, organizationId }: OrganizationOwnerCar) {
-    return await this.organizationCarsServuce.findOneByOwner(
+    return await this.organizationCarsService.findOneByOwner(
       organizationId,
       ownerId,
     );
@@ -33,7 +33,7 @@ export class CarsController {
 
   @MessagePattern(CarServiceEvents.FIND_ORGANIZATION_CAR)
   async findOne({ organizationId, carId }: OrganizationCarDto) {
-    return await this.organizationCarsServuce.findOne(carId, organizationId);
+    return await this.organizationCarsService.findOne(carId, organizationId);
   }
 
   @MessagePattern(CarServiceEvents.ADD_ORGANIZATION_CAR)
@@ -56,7 +56,7 @@ export class CarsController {
   async updateOne(body: UpdateCarDto) {
     const { carId, organizationId } = body;
 
-    return await this.organizationCarsServuce.updateOne(
+    return await this.organizationCarsService.updateOne(
       carId,
       organizationId,
       body,
@@ -65,6 +65,6 @@ export class CarsController {
 
   @MessagePattern(CarServiceEvents.DELETE_ORGANIZATION_CAR)
   async deleteOne({ carId, organizationId }: OrganizationCarDto) {
-    return await this.organizationCarsServuce.deleteOne(carId, organizationId);
+    return await this.organizationCarsService.deleteOne(carId, organizationId);
   }
 }

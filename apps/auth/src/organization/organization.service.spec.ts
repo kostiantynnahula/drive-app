@@ -1,11 +1,13 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { OrganizationService } from './organization.service';
+import { PrismaModule } from '../prisma/prisma.module';
 
 describe('OrganizationService', () => {
   let service: OrganizationService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
+      imports: [PrismaModule],
       providers: [OrganizationService],
     }).compile();
 
