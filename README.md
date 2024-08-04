@@ -32,6 +32,31 @@
 $ npm install
 ```
 
+## First run
+Visit every microservice in the `apps` folder and configure `.env` file.
+
+```
+cd apps/{microservice-name} && cp .env.example .env
+```
+and create .env.local to work with prisma from local env
+
+```
+cd apps/{microservice-name} && cp .env.example .env.local
+```
+
+## Prisma
+Run migrations in the microservice folder
+
+```
+pnpm run prisma:client migrate dev
+```
+
+Generate a new migration
+
+```
+pnpm run prisma:client migrate dev --name ${migration-name}
+```
+
 ## Running the app
 
 ```bash
@@ -44,6 +69,18 @@ $ npm run start:dev
 # production mode
 $ npm run start:prod
 ```
+
+## Run the app via docker
+
+```
+docker compose up
+```
+
+## Build a microservice 
+```
+cd apps/{microservice} && docker build -t {microservice-name} -f Dockerfile ../../
+```
+
 
 ## Test
 
