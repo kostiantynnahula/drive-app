@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -13,7 +12,12 @@ import {
 import { OrganizationsService } from './organizations.service';
 import { CreateOrganizationDto } from './dto/create-organization.dto';
 import { UpdateOrganizationDto } from './dto/update-organization.dto';
-import { CurrentUser, JwtAuthGuard, User } from '@app/common';
+import {
+  CurrentUser,
+  hasUserOrganization,
+  JwtAuthGuard,
+  User,
+} from '@app/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Organizations')
@@ -25,9 +29,7 @@ export class OrganizationsController {
 
   @Get()
   async findOne(@CurrentUser() user: User) {
-    if (!user.organizationId) {
-      throw new NotFoundException('User does not belong to any organization');
-    }
+    hasUserOrganization(user);
 
     const result = await this.organizationsService.findOne(user.organizationId);
 
@@ -43,6 +45,7 @@ export class OrganizationsController {
     @Body() body: CreateOrganizationDto,
     @CurrentUser() user: User,
   ) {
+    hasUserOrganization(user, false);
     return await this.organizationsService.createOne(body, user.id);
   }
 
@@ -51,9 +54,7 @@ export class OrganizationsController {
     @Body() body: UpdateOrganizationDto,
     @CurrentUser() user: User,
   ) {
-    if (!user.organizationId) {
-      throw new BadRequestException('User does not belong to any organization');
-    }
+    hasUserOrganization(user);
 
     const organization = await this.organizationsService.findOne(
       user.organizationId,
@@ -68,9 +69,7 @@ export class OrganizationsController {
 
   @Delete(':id')
   async deleteOne(@Param('id') id: string, @CurrentUser() user: User) {
-    if (!user.organizationId) {
-      throw new BadRequestException('User does not belong to any organization');
-    }
+    hasUserOrganization(user);
 
     const organization = await this.organizationsService.findOne(id);
 

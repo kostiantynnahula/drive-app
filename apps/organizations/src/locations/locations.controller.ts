@@ -14,7 +14,12 @@ import { CreateLocationDto } from './dto/create-location.dto';
 import { UpdateLocationDto } from './dto/update-location.dto';
 import { OrganizationsService } from './../organizations/organizations.service';
 import { SearchQuery } from './dto/search.query';
-import { CurrentUser, JwtAuthGuard, User } from '@app/common';
+import {
+  CurrentUser,
+  hasUserOrganization,
+  JwtAuthGuard,
+  User,
+} from '@app/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Locations')
@@ -29,9 +34,7 @@ export class LocationsController {
 
   @Get()
   async findMany(@CurrentUser() user: User, @Query() query: SearchQuery) {
-    if (!user.organizationId) {
-      throw new BadRequestException('User does not belong to any organization');
-    }
+    hasUserOrganization(user);
 
     const organization = await this.organizationService.findOne(
       user.organizationId,
@@ -62,9 +65,7 @@ export class LocationsController {
 
   @Post()
   async createOne(@CurrentUser() user: User, @Body() data: CreateLocationDto) {
-    if (!user.organizationId) {
-      throw new BadRequestException('User does not belong to any organization');
-    }
+    hasUserOrganization(user);
 
     return await this.locationsService.createOne(user.organizationId, data);
   }
@@ -75,9 +76,7 @@ export class LocationsController {
     @Param('locationId') locationId: string,
     @Body() data: UpdateLocationDto,
   ) {
-    if (!user.organizationId) {
-      throw new BadRequestException('User does not belong to any organization');
-    }
+    hasUserOrganization(user);
 
     return await this.locationsService.updateOne(
       user.organizationId,
@@ -91,9 +90,7 @@ export class LocationsController {
     @CurrentUser() user: User,
     @Param('locationId') locationId: string,
   ) {
-    if (!user.organizationId) {
-      throw new BadRequestException('User does not belong to any organization');
-    }
+    hasUserOrganization(user);
 
     return await this.locationsService.deleteOne(
       user.organizationId,

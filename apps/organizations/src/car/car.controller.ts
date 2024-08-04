@@ -13,7 +13,13 @@ import { CarService } from './car.service';
 import { CreateCarDto } from './dto/create-car.dto';
 import { UpdateCarDto } from './dto/update-car.dto';
 import { LocationsService } from '../locations/locations.service';
-import { CurrentUser, JwtAuthGuard, Role, User } from '@app/common';
+import {
+  CurrentUser,
+  hasUserRole,
+  JwtAuthGuard,
+  Role,
+  User,
+} from '@app/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Cars')
@@ -44,9 +50,7 @@ export class CarController {
     }
 
     if (user) {
-      if (user.role !== Role.INSTRUCTOR) {
-        throw new BadRequestException('User is not an instructor');
-      }
+      hasUserRole(user, Role.INSTRUCTOR);
 
       if (user.locationId !== locationId) {
         throw new BadRequestException('User is not in the same location');
