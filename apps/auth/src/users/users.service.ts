@@ -1,6 +1,5 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { CreateUserDto } from '../utils/dto/create-user.dto';
-import { GetUserDto } from './dto/get-user.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { User } from '.prisma/client';
 import { HashService } from '../utils/services/hash.service';
@@ -60,14 +59,16 @@ export class UsersService {
    * @param {PaginationQuery} query
    * @returns {Promise<User[]>}
    */
-  async findMany(query: PaginationQuery): Promise<User[]> {
+  async findMany(query: PaginationQuery): Promise<Omit<User, 'password'>[]> {
     const { take = 10, skip = 0 } = query;
 
     const result = await this.prismaService.user.findMany({
+      omit: { password: true },
       orderBy: { id: 'desc' },
       take: Number(take),
       skip: Number(skip),
     });
+
     return result;
   }
 
@@ -77,8 +78,13 @@ export class UsersService {
    * @param {string} id
    * @returns {Promise<User>}
    */
-  async findOne(id: string): Promise<User> {
-    return await this.prismaService.user.findFirst({ where: { id } });
+  async findOne(id: string): Promise<Omit<User, 'password'>> {
+    return await this.prismaService.user.findFirst({
+      omit: {
+        password: true,
+      },
+      where: { id },
+    });
   }
 
   /**
@@ -101,19 +107,8 @@ export class UsersService {
     if (!passwordIsValid) {
       throw new UnauthorizedException('Credentials are not valid.');
     }
-    return user;
-  }
 
-  /**
-   * Get user by id
-   *
-   * @param {GetUserDto} param
-   * @returns {Promise<User>}
-   */
-  async getUser({ id }: GetUserDto) {
-    return await this.prismaService.user.findFirstOrThrow({
-      where: { id: id },
-    });
+    return { ...user, password: undefined };
   }
 
   /**
